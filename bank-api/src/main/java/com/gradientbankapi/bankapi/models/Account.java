@@ -1,8 +1,8 @@
-package models;
+package com.gradientbankapi.bankapi.models;
 //POJO - plain old java object
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import enums.AccountType;
+import com.gradientbankapi.bankapi.enums.AccountType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
