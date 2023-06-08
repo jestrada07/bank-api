@@ -1,8 +1,8 @@
-package models;
+package com.gradientbankapi.bankapi.models;
 
-import enums.TransactionType;
-import enums.MediumType;
-import enums.StatusType;
+import com.gradientbankapi.bankapi.enums.MediumType;
+import com.gradientbankapi.bankapi.enums.StatusType;
+import com.gradientbankapi.bankapi.enums.TransactionType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-public class Deposit {
+public class Withdrawal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Deposit {
     private String transaction_date;
     private StatusType status;
     @NotEmpty
-    private Long payee_id;
+    private Long payer_id;
     @NotEmpty
     private MediumType medium;
     @NotEmpty
@@ -61,12 +61,12 @@ public class Deposit {
         this.status = status;
     }
 
-    public Long getPayee_id() {
-        return payee_id;
+    public Long getPayer_id() {
+        return payer_id;
     }
 
-    public void setPayee_id(Long payee_id) {
-        this.payee_id = payee_id;
+    public void setPayer_id(Long payer_id) {
+        this.payer_id = payer_id;
     }
 
     public MediumType getMedium() {

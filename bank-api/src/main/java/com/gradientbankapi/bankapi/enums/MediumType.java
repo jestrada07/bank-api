@@ -1,4 +1,4 @@
-package enums;
+package com.gradientbankapi.bankapi.enums;
 
 public enum MediumType {
 

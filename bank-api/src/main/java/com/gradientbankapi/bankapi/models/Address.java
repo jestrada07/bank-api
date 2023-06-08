@@ -1,4 +1,4 @@
-package models;
+package com.gradientbankapi.bankapi.models;
 //POJO - plain old java object
 
 import javax.persistence.Entity;
