@@ -1,13 +1,13 @@
 package com.gradientbankapi.bankapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gradientbankapi.bankapi.enums.MediumType;
 import com.gradientbankapi.bankapi.enums.StatusType;
 import com.gradientbankapi.bankapi.enums.TransactionType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
@@ -28,6 +28,11 @@ public class Withdrawal {
     private double amount;
     @NotEmpty
     private String description;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Account account;
 
     public Long getId() {
         return id;
@@ -92,4 +97,13 @@ public class Withdrawal {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
 }
