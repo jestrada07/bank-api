@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,8 +21,8 @@ public class DepositController {
     DepositService depositService;
 
     @PostMapping("/accounts/{accountId}/deposits")
-    public ResponseEntity<Void> createDeposit(@PathVariable Long accountId, @RequestBody Deposit deposit){
-        depositService.createDeposit(deposit);
+    public ResponseEntity<Void> createDeposit(@PathVariable Long accountId, @RequestBody Deposit depositToBeCreated){
+        depositService.createDeposit(accountId,depositToBeCreated);
         logger.info("Deposit created Successfully!");
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -33,7 +34,7 @@ public class DepositController {
     }
 
     @GetMapping("/accounts/{accountId}/deposits")
-    public Optional<Deposit> getDepositsByAccount(@PathVariable Long accountId){
+    public List<Deposit> getDepositsByAccount(@PathVariable Long accountId){
         logger.info("Successfully retrieved deposits for this account!");
         return depositService.getDepositsForAccount(accountId);
     }
