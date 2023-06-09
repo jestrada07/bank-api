@@ -19,9 +19,21 @@ public class DepositService {
     @Autowired
     AccountRepo accountRepo;
 
-    public void createDeposit(Long accountId, Deposit depositToBeCreated ){
+//    public void createDeposit(Long accountId, Deposit depositToBeCreated ){
+//        Account account = accountRepo.findById(accountId).orElse(null);
+//        depositToBeCreated.setAccount(account);
+//        depositRepo.save(depositToBeCreated);
+//    }
+
+    public void createDeposit(Long accountId, Deposit depositToBeCreated){
         Account account = accountRepo.findById(accountId).orElse(null);
-        depositToBeCreated.setAccount(account);
+
+        if (account == null) {
+            throw new ResourceNotFoundException("The account with id " + accountId + " does not exist :(");
+        }
+
+        account.setBalance(account.getBalance() + depositToBeCreated.getAmount()); // Increase account balance by the deposit amount
+        accountRepo.save(account); // Save updated account to the database
         depositRepo.save(depositToBeCreated);
     }
 
