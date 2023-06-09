@@ -8,6 +8,7 @@ import com.gradientbankapi.bankapi.repos.WithdrawalRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +21,19 @@ public class WithdrawalService {
     @Autowired
     private AccountRepo accountRepo;
 
-    //create a withdrawal
+    @Transactional
     public void createAWithdrawal(Long accountId, Withdrawal withdrawalToBeCreated) {
-        Account account = accountRepo.findById(accountId).orElse(null);
+        Account account = accountRepo.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("The account with id " + accountId + " does not exist :("));
+
+        // Check if account has enough balance to make the withdrawal
+        if (account.getBalance() < withdrawalToBeCreated.getAmount()) {
+            throw new IllegalStateException("The account with id " + accountId + " has insufficient balance for this withdrawal :(");
+        }
+
+        account.setBalance(account.getBalance() - withdrawalToBeCreated.getAmount()); // Decrease account balance by the withdrawal amount
+        accountRepo.save(account); // Save updated account to the database
+
         withdrawalToBeCreated.setAccount(account);
         withdrawalRepo.save(withdrawalToBeCreated);
     }
