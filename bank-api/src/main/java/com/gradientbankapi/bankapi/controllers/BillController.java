@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,7 +27,7 @@ public class BillController {
     }
 
     @GetMapping("/customers/{CustomerId}/bills")
-    public Optional<Bill> getBillThroughCustomer(@PathVariable Long CustomerId, @RequestBody Bill bill){
+    public List<Bill> getBillThroughCustomer(@PathVariable Long CustomerId, @RequestBody Bill bill){
         BillLogs.info("Existing Bills for Customer found");
         return billService.showAllBillsForCustomer(CustomerId);
     }
@@ -37,12 +38,12 @@ public class BillController {
         return billService.showBillById(billId);
     }
 
-    @PostMapping("/accounts/{accountId}/bills")
-    public ResponseEntity<Void> createBillForAccount(@PathVariable Long accountId, @RequestBody Bill bill){
-        BillLogs.info("Bill successfully constructed for account");
-        billService.createBill(bill);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+//    @PostMapping("/accounts/{accountId}/bills")
+//    public ResponseEntity<Void> createBillForAccount(@PathVariable Long accountId, @RequestBody Bill bill){
+//        BillLogs.info("Bill successfully constructed for account");
+//        billService.createBill(bill);
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
 
     @DeleteMapping("/bills/{billId}")
     public ResponseEntity<Void> deleteDeposit(@PathVariable Long billId){
