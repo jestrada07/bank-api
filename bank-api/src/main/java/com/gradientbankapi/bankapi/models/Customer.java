@@ -1,9 +1,6 @@
 package com.gradientbankapi.bankapi.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
@@ -21,7 +18,10 @@ public class Customer {
     @NotEmpty
     private String last_Name;
 
-//    private Set<Address> address;
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Set<Address> address;
 
 
     public Long getId() {
@@ -48,11 +48,11 @@ public class Customer {
         this.last_Name = last_Name;
     }
 
-//    public Set<Address> getAddress() {
-//        return address;
-//    }
-//
-//    public void setAddress(Set<Address> address) {
-//        this.address = address;
-//    }
+    public Set<Address> getAddress() {
+        return address;
+    }
+
+    public void setAddress(Set<Address> address) {
+        this.address = address;
+    }
 }
