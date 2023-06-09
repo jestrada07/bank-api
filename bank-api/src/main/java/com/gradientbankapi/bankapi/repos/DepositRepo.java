@@ -1,6 +1,5 @@
 package com.gradientbankapi.bankapi.repos;
 
-import com.gradientbankapi.bankapi.models.Bill;
 import com.gradientbankapi.bankapi.models.Deposit;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -8,10 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BillRepo extends CrudRepository<Bill, Long> {
+public interface DepositRepo extends CrudRepository<Deposit, Long> {
 
-    Optional<Bill> findByAccount(Long accountId);
-
-    Optional<Bill> findByCustomer(Long CustomerId);
+    Optional<Deposit> findByAccount(Long accountId);
 
 }
