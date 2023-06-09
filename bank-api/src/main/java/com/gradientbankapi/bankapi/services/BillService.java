@@ -1,6 +1,7 @@
 package com.gradientbankapi.bankapi.services;
 
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
+import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Bill;
 import com.gradientbankapi.bankapi.repos.BillRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ public class BillService {
 
 
     //post
-    public void createBill(Bill bill) {
-        billRepo.save(bill);
-    }
+//    public void createBill(Long accountId, Bill bill) {
+//        Account account = accountRepo.findById(accountId);
+//        bill.setAccount_id(accountId);
+//        billRepo.save(bill);
+//    }
+
 
     //get bill by the bill id
     public Optional<Bill> showBillById(Long BillId) {
