@@ -39,7 +39,7 @@ public class DepositController {
     }
 
     @PutMapping("/deposits/{depositId}")
-    public ResponseEntity<Void> updateBlog(@PathVariable Long depositId, @RequestBody Deposit deposit){
+    public ResponseEntity<Void> updateDeposit(@PathVariable Long depositId, @RequestBody Deposit deposit){
         depositService.updateDeposit(depositId, deposit);
         logger.info("Deposit updated successfully!");
         return new ResponseEntity<>(HttpStatus.OK);
@@ -49,12 +49,7 @@ public class DepositController {
     public ResponseEntity<Void> deleteDeposit(@PathVariable Long depositId){
         depositService.deleteDeposit(depositId);
         logger.info("Deposit deleted successfully!");
-       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> master
 }
