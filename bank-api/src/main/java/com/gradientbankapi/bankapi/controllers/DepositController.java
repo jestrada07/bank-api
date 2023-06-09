@@ -21,20 +21,20 @@ public class DepositController {
     DepositService depositService;
 
     @PostMapping("/accounts/{accountId}/deposits")
-    public ResponseEntity<Void> createDeposit(@PathVariable Long accountId, @RequestBody Deposit depositToBeCreated){
-        depositService.createDeposit(accountId,depositToBeCreated);
+    public ResponseEntity<Void> createDeposit(@PathVariable Long accountId, @RequestBody Deposit depositToBeCreated) {
+        depositService.createDeposit(accountId, depositToBeCreated);
         logger.info("Deposit created Successfully!");
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/deposits/{depositId}")
-    public Optional<Deposit> getDepositById(@PathVariable Long depositId){
+    public Optional<Deposit> getDepositById(@PathVariable Long depositId) {
         logger.info("Successfully retrieved deposit!");
         return depositService.getDepositById(depositId);
     }
 
     @GetMapping("/accounts/{accountId}/deposits")
-    public List<Deposit> getDepositsByAccount(@PathVariable Long accountId){
+    public List<Deposit> getDepositsByAccount(@PathVariable Long accountId) {
         logger.info("Successfully retrieved deposits for this account!");
         return depositService.getDepositsForAccount(accountId);
     }
@@ -48,7 +48,7 @@ public class DepositController {
     }
 
     @DeleteMapping("/deposits/{depositId}")
-    public ResponseEntity<Void> deleteDeposit(@PathVariable Long depositId){
+    public ResponseEntity<Void> deleteDeposit(@PathVariable Long depositId) {
         depositService.deleteDeposit(depositId);
         logger.info("Deposit deleted successfully!");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

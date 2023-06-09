@@ -9,6 +9,7 @@ import com.gradientbankapi.bankapi.repos.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,54 +21,55 @@ public class AccountService {
     @Autowired
     private CustomerRepo customerRepo;
 
-
-    public void addAccount(Long customerId, Account account){
-        //we need to find the customer by id
-        Customer customer = customerRepo.findById(customerId).orElse(null);
-        //setting the account as the customer's order
-        account.setCustomer(customer);
-        //save the account for customer with specific id
-        accountRepo.save(account);}
-
-
-    public Iterable<Account> getAllAccount(){
-
-        return accountRepo.findAll(); //gets all accounts
+    //get all accounts
+    public Iterable<Account> getAllAccounts() {
+        return accountRepo.findAll();
     }
 
-    public Optional<Account> getAccountById(Long accountId){
+    //get all accounts from a specific customer
+    public List<Account> getAllAccountsByCustomerId(Long customerId) {
+        return accountRepo.findAllAccountsByCustomerId(customerId);
+    }
+
+    //get an account by id
+    public Optional<Account> getAnAccountById(Long accountId) {
         verifyAccount(accountId);
-        return accountRepo.findById(accountId); //gets account by ID
-
+        return accountRepo.findById(accountId);
     }
 
-    public void updateAccount(Long customerId,Long accountId, Account account){
+    //create an account
+    public void createAnAccount(Long customerId, Account accountToBeCreated) {
         Customer customer = customerRepo.findById(customerId).orElse(null);
-        Account a = accountRepo.findById(accountId).orElse(null);
-        if( a != null){
-            a.setId(account.getId());
-            a.setBalance(account.getBalance());
-            a.setRewards(account.getRewards());
-            a.setNickname(account.getNickname());
-
-        }
-        account.setCustomer(customer);
-        accountRepo.save(account);
+        accountToBeCreated.setCustomer(customer);
+        accountRepo.save(accountToBeCreated);
     }
 
-    public void deleteAccount(Long accountId){
+    //update a specific existing account
+    public void updateExistingAccount(Long customerId, Long accountId, Account accountToBeUpdated) {
+        verifyAccount(accountId);
+        Customer customer = customerRepo.findById(customerId).orElse(null);
+        Account account = accountRepo.findById(accountId).orElse(null);
+        if(account != null) {
+            account.setType(accountToBeUpdated.getType());
+            account.setNickname(accountToBeUpdated.getNickname());
+            account.setRewards(accountToBeUpdated.getRewards());
+            account.setBalance(accountToBeUpdated.getBalance());
+        }
+        accountToBeUpdated.setCustomer(customer);
+        accountRepo.save(accountToBeUpdated);
+    }
+
+    //delete a specific existing account
+    public void deleteExistingAccount(Long accountId) {
         verifyAccount(accountId);
         accountRepo.deleteById(accountId);
-        }
+    }
 
     protected void verifyAccount(Long accountId) throws ResourceNotFoundException {
         Optional<Account> account = accountRepo.findById(accountId);
-        if(account.isEmpty()){
-            throw new ResourceNotFoundException("The account with id " + accountId + " does not exist :(");
+        if(account.isEmpty()) {
+            throw new ResourceNotFoundException("An account with an ID of #" + accountId + " does not exist! :/");
         }
     }
-
-
-
 
 }

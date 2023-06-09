@@ -44,6 +44,14 @@ public class    Account {
         this.nickname = nickname;
     }
 
+    public AccountType getType() {
+        return type;
+    }
+
+    public void setType(AccountType type) {
+        this.type = type;
+    }
+
     public Integer getRewards() {
         return rewards;
     }
