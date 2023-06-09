@@ -41,7 +41,7 @@ public class DepositController {
 
 
     @PutMapping("/deposits/{depositId}")
-    public ResponseEntity<Void> updateBlog(@PathVariable Long depositId, @RequestBody Deposit deposit) {
+    public ResponseEntity<Void> updateDeposit(@PathVariable Long depositId, @RequestBody Deposit deposit){
         depositService.updateDeposit(depositId, deposit);
         logger.info("Deposit updated successfully!");
         return new ResponseEntity<>(HttpStatus.OK);

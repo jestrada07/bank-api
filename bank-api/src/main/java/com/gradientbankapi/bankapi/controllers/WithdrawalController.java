@@ -25,14 +25,14 @@ public class WithdrawalController {
     public ResponseEntity<List<Withdrawal>> getAllWithdrawalsByAccountId(@PathVariable Long accountId) {
         logger.info("Fetched all withdrawals from account ID #" + accountId);
         return new ResponseEntity<>(withdrawalService.getAllWithdrawalsByAccountId(accountId), HttpStatus.OK);
-    }
+    } //tested and works
 
     //HTTP method to get a withdrawal by id
     @GetMapping("/withdrawals/{withdrawalId}")
     public ResponseEntity<Optional<Withdrawal>> getAWithdrawalById(@PathVariable Long withdrawalId) {
         logger.info("Fetched withdrawal ID #" + withdrawalId);
         return new ResponseEntity<>(withdrawalService.getAWithdrawalById(withdrawalId), HttpStatus.OK);
-    }
+    } //tested and works
 
     //HTTP method to create a withdrawal
     @PostMapping("/accounts/{accountId}/withdrawals")
@@ -40,7 +40,7 @@ public class WithdrawalController {
         withdrawalService.createAWithdrawal(accountId, withdrawalToBeCreated);
         logger.info("Successfully created a withdrawal for account ID #" + accountId);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    } //tested and works
 
     //HTTP method to update a specific existing withdrawal
     @PutMapping("/withdrawals/{withdrawalId}")
@@ -56,6 +56,6 @@ public class WithdrawalController {
         withdrawalService.deleteExistingWithdrawal(withdrawalId);
         logger.info("Successfully deleted withdrawal ID #" + withdrawalId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    } //tested and works
 
 }

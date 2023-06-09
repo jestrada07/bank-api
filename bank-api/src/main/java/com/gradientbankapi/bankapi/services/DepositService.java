@@ -8,7 +8,6 @@ import com.gradientbankapi.bankapi.repos.DepositRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,12 @@ public class DepositService {
     @Autowired
     AccountRepo accountRepo;
 
-    @Transactional
+//    public void createDeposit(Long accountId, Deposit depositToBeCreated ){
+//        Account account = accountRepo.findById(accountId).orElse(null);
+//        depositToBeCreated.setAccount(account);
+//        depositRepo.save(depositToBeCreated);
+//    }
+
     public void createDeposit(Long accountId, Deposit depositToBeCreated){
         Account account = accountRepo.findById(accountId).orElse(null);
 
