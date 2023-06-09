@@ -32,7 +32,7 @@ public class DepositService {
 
     public List<Deposit> getDepositsForAccount(Long accountId){
         verifyDeposit(accountId);
-        return depositRepo.findByAccount(accountId);
+        return depositRepo.findAllDepositsByAccountId(accountId);
     }
 
     public void updateDeposit(Long depositId, Deposit deposit){

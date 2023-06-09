@@ -39,6 +39,7 @@ public class DepositController {
         return depositService.getDepositsForAccount(accountId);
     }
 
+
     @PutMapping("/deposits/{depositId}")
     public ResponseEntity<Void> updateBlog(@PathVariable Long depositId, @RequestBody Deposit deposit) {
         depositService.updateDeposit(depositId, deposit);

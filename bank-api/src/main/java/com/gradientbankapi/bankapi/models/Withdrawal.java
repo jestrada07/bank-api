@@ -1,6 +1,5 @@
 package com.gradientbankapi.bankapi.models;
 
-
 import com.gradientbankapi.bankapi.enums.MediumType;
 import com.gradientbankapi.bankapi.enums.StatusType;
 import com.gradientbankapi.bankapi.enums.TransactionType;
@@ -10,9 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gradientbankapi.bankapi.enums.MediumType;
-import com.gradientbankapi.bankapi.enums.StatusType;
-import com.gradientbankapi.bankapi.enums.TransactionType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
