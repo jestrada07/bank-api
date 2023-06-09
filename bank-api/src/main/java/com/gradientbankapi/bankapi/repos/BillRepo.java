@@ -13,6 +13,6 @@ public interface BillRepo extends CrudRepository<Bill, Long> {
 
     Optional<Bill> findByAccount(Long accountId);
 
-    List<Bill> findAllByCustomer(Customer customer);
+    List<Bill> findAllByCustomer(Long customerId);
 
 }
