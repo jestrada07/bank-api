@@ -1,12 +1,14 @@
 package com.gradientbankapi.bankapi.services;
 
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
+import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Deposit;
+import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.DepositRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.module.ResolutionException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,9 +16,13 @@ public class DepositService {
 
     @Autowired
     DepositRepo depositRepo;
+    @Autowired
+    AccountRepo accountRepo;
 
-    public void createDeposit(Deposit deposit){
-        depositRepo.save(deposit);
+    public void createDeposit(Long accountId, Deposit depositToBeCreated ){
+        Account account = accountRepo.findById(accountId).orElse(null);
+        depositToBeCreated.setAccount(account);
+        depositRepo.save(depositToBeCreated);
     }
 
     public Optional<Deposit> getDepositById(Long depositId){
@@ -24,9 +30,9 @@ public class DepositService {
         return depositRepo.findById(depositId);
     }
 
-    public Optional<Deposit> getDepositsForAccount(Long accountId){
+    public List<Deposit> getDepositsForAccount(Long accountId){
         verifyDeposit(accountId);
-        return depositRepo.findByAccount(accountId);
+        return depositRepo.findAllDepositsByAccountId(accountId);
     }
 
     public void updateDeposit(Long depositId, Deposit deposit){

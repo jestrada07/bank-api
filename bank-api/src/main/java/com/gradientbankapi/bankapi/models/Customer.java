@@ -21,7 +21,7 @@ public class Customer {
     @NotEmpty
     private String last_Name;
 
-    private Set<Address> address;
+//    private Set<Address> address;
 
 
     public Long getId() {
@@ -48,11 +48,11 @@ public class Customer {
         this.last_Name = last_Name;
     }
 
-    public Set<Address> getAddress() {
-        return address;
-    }
-
-    public void setAddress(Set<Address> address) {
-        this.address = address;
-    }
+//    public Set<Address> getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(Set<Address> address) {
+//        this.address = address;
+//    }
 }
