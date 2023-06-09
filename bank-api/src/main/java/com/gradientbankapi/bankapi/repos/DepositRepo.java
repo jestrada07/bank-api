@@ -13,7 +13,5 @@ public interface DepositRepo extends CrudRepository<Deposit, Long> {
 
     List<Deposit> findAllDepositsByAccountId(Long accountId);
 
-    List<Deposit> findByAccount(Long accountId);
-
 
 }
