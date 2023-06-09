@@ -51,7 +51,10 @@ public class DepositController {
         logger.info("Deposit deleted successfully!");
        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+<<<<<<< HEAD
+=======
 
 
 
+>>>>>>> master
 }
