@@ -32,11 +32,11 @@ public class DepositController {
         return depositService.getDepositById(depositId);
     }
 
-    @GetMapping("/accounts/{accountId}/deposits")
-    public Optional<Deposit> getDepositsByAccount(@PathVariable Long accountId){
-        logger.info("Successfully retrieved deposits for this account!");
-        return depositService.getDepositsForAccount(accountId);
-    }
+//    @GetMapping("/accounts/{accountId}/deposits")
+//    public Optional<Deposit> getDepositsByAccount(@PathVariable Long accountId){
+//        logger.info("Successfully retrieved deposits for this account!");
+//        return depositService.getDepositsForAccount(accountId);
+//    }
 
     @PutMapping("/deposits/{depositId}")
     public ResponseEntity<Void> updateBlog(@PathVariable Long depositId, @RequestBody Deposit deposit){
@@ -51,10 +51,5 @@ public class DepositController {
         logger.info("Deposit deleted successfully!");
        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> master
 }

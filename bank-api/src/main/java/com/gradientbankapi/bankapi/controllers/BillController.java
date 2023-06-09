@@ -37,12 +37,12 @@ public class BillController {
         return billService.showBillById(billId);
     }
 
-    @PostMapping("/accounts/{accountId}/bills")
-    public ResponseEntity<Void> createBillForAccount(@PathVariable Long accountId, @RequestBody Bill bill){
-        BillLogs.info("Bill successfully constructed for account");
-        billService.createBill(bill);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+//    @PostMapping("/accounts/{accountId}/bills")
+//    public ResponseEntity<Void> createBillForAccount(@PathVariable Long accountId, @RequestBody Bill bill){
+//        BillLogs.info("Bill successfully constructed for account");
+//        billService.createBill(bill);
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
 
     @DeleteMapping("/bills/{billId}")
     public ResponseEntity<Void> deleteDeposit(@PathVariable Long billId){

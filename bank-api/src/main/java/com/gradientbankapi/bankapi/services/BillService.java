@@ -3,10 +3,12 @@ package com.gradientbankapi.bankapi.services;
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Bill;
+import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.BillRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,14 +17,16 @@ public class BillService {
     @Autowired
     private BillRepo billRepo;
 
+    @Autowired
+    private AccountRepo accountRepo;
+
 
     //post
-//    public void createBill(Long accountId, Bill bill) {
-//        Account account = accountRepo.findById(accountId);
-//        bill.setAccount_id(accountId);
-//        billRepo.save(bill);
-//    }
-
+    public void createBill(Long accountId, Bill bill) {
+       Account account = accountRepo.findById(accountId).orElse(null);
+       bill.setAccount(account);
+        billRepo.save(bill);
+    }
 
     //get bill by the bill id
     public Optional<Bill> showBillById(Long BillId) {
@@ -31,9 +35,8 @@ public class BillService {
     }
 
     //get all bills by customer id
-    public Optional<Bill> showAllBillsForCustomer(Long CustomerId) {
-        verifyBill(CustomerId);
-        return billRepo.findByCustomer(CustomerId);
+    public List<Bill> showAllBillsForCustomer(Long customerId) {
+        return billRepo.findAllByCustomer(customerId);
     }
 
     //get all bills by account id
