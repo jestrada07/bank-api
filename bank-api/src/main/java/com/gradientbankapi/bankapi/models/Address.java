@@ -1,10 +1,7 @@
 package com.gradientbankapi.bankapi.models;
 //POJO - plain old java object
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
@@ -23,6 +20,18 @@ public class Address {
     private String state;
     @NotEmpty
     private String zip;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
 
     public Long getId() {
