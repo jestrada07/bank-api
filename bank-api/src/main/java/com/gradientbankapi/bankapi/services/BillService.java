@@ -8,6 +8,7 @@ import com.gradientbankapi.bankapi.repos.BillRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,25 @@ public class BillService {
 
 
     //post
+
+    @Transactional
     public void createBill(Long accountId, Bill bill) {
-       Account account = accountRepo.findById(accountId).orElse(null);
-       bill.setAccount(account);
+        // Find account or throw error if not found
+        Account account = accountRepo.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("The account with id " + accountId + " does not exist"));
+
+        // Check if account has enough balance to pay the bill
+        if (account.getBalance() < bill.getPayment_amount()) {
+            throw new IllegalStateException("The account with id " + accountId + " has insufficient balance to pay this bill");
+        }
+
+        account.setBalance(account.getBalance() - bill.getPayment_amount()); // Decrease account balance by the bill amount
+        accountRepo.save(account); // Save updated account to the database
+
+        bill.setAccount(account);
         billRepo.save(bill);
     }
+
 
     //get bill by the bill id
     public Optional<Bill> showBillById(Long BillId) {
