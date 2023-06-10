@@ -78,6 +78,7 @@ public class BillService {
 
     //Deletes bill
     public void deleteBill(Long BillId){
+
         billRepo.deleteById(BillId);
     }
 
