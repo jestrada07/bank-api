@@ -22,7 +22,7 @@ public class CustomerController {
 
     //HTTP method to retrieve a customer by their specified account
     @GetMapping("/accounts/{accountId}/customer")
-    public ResponseEntity<Optional<Account>> getCustomerByAccountId(@PathVariable Long accountId) {
+    public ResponseEntity<Customer> getCustomerByAccountId(@PathVariable Long accountId) {
         return new ResponseEntity<>(customerService.getCustomerByAccountId(accountId), HttpStatus.OK);
     }
 
