@@ -3,6 +3,7 @@ package com.gradientbankapi.bankapi.services;
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Bill;
+import com.gradientbankapi.bankapi.models.Customer;
 import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.BillRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class BillService {
 
     //post
 
+
     @Transactional
     public void createBill(Long accountId, Bill bill) {
         // Find account or throw error if not found
@@ -35,12 +37,22 @@ public class BillService {
             throw new IllegalStateException("The account with id " + accountId + " has insufficient balance to pay this bill");
         }
 
+        // Fetch the customer associated with the account
+        Customer customer = account.getCustomer(); // This assumes that your Account entity has a getCustomer() method
+
+        // If the Customer is null, throw an exception or handle the case as required
+        if(customer == null) {
+            throw new IllegalStateException("The account with id " + accountId + " is not associated with any customer");
+        }
+
         account.setBalance(account.getBalance() - bill.getPayment_amount()); // Decrease account balance by the bill amount
         accountRepo.save(account); // Save updated account to the database
 
         bill.setAccount(account);
+        bill.setCustomer(customer); // Set the associated customer to the bill
         billRepo.save(bill);
     }
+
 
 
     //get bill by the bill id
