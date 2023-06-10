@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 public class ErrorDetail {
+
         private String title;
         private int status;
         private String detail;
         private long timeStamp;
         private String developerMessage;
         private Map<String, List<ValidationError>> errors = new HashMap<>();
-
 
         public String getTitle() {return title;}
         public void setTitle(String title) {this.title = title;}
@@ -29,8 +29,6 @@ public class ErrorDetail {
         public void setDeveloperMessage(String developerMessage) {this.developerMessage = developerMessage;}
 
         public Map<String, List<ValidationError>> getErrors() {return errors;}
-        public void setErrors(Map<String, List<ValidationError>> errors) {this.errors = errors;}
-
-
+        public void setErrors(Map<String, List<ValidationError>> errors) {this.errors = errors;
 
 }
