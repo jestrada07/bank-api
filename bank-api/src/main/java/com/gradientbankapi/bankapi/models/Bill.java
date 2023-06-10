@@ -124,7 +124,6 @@ public class Bill {
         this.account.setId(accountId);
     }
 
-
     public Account getAccount() {
         return account;
     }

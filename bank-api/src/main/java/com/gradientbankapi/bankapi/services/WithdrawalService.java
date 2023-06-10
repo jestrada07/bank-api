@@ -8,6 +8,7 @@ import com.gradientbankapi.bankapi.repos.WithdrawalRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +21,19 @@ public class WithdrawalService {
     @Autowired
     private AccountRepo accountRepo;
 
-    //create a withdrawal
+    @Transactional
     public void createAWithdrawal(Long accountId, Withdrawal withdrawalToBeCreated) {
-        Account account = accountRepo.findById(accountId).orElse(null);
+        Account account = accountRepo.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("The account with id " + accountId + " does not exist :("));
+
+        // Check if account has enough balance to make the withdrawal
+        if (account.getBalance() < withdrawalToBeCreated.getAmount()) {
+            throw new IllegalStateException("The account with id " + accountId + " has insufficient balance for this withdrawal :(");
+        }
+
+        account.setBalance(account.getBalance() - withdrawalToBeCreated.getAmount()); // Decrease account balance by the withdrawal amount
+        accountRepo.save(account); // Save updated account to the database
+
         withdrawalToBeCreated.setAccount(account);
         withdrawalRepo.save(withdrawalToBeCreated);
     }
@@ -39,15 +50,55 @@ public class WithdrawalService {
     }
 
     //update an existing withdrawal
-    public void updateExistingWithdrawal(Long withdrawalId, Withdrawal withdrawalToBeUpdated) {
-        verifyWithdrawal(withdrawalId);
-        withdrawalToBeUpdated.setId(withdrawalId);
-        withdrawalRepo.save(withdrawalToBeUpdated);
+    public void updateExistingWithdrawal(Long withdrawalId, Withdrawal withdrawalUpdate) {
+        Withdrawal originalWithdrawal = withdrawalRepo.findById(withdrawalId)
+                .orElseThrow(() -> new ResourceNotFoundException("A withdrawal with an ID of #" + withdrawalId + " does not exist! :)"));
+
+        Account account = originalWithdrawal.getAccount();
+
+        if(withdrawalUpdate.getAmount() != originalWithdrawal.getAmount()) {
+            // First, revert the original withdrawal
+            account.setBalance(account.getBalance() + originalWithdrawal.getAmount());
+
+            // Then, apply the updated withdrawal
+            if(account.getBalance() < withdrawalUpdate.getAmount()) {
+                throw new IllegalStateException("The account with id " + account.getId() + " has insufficient balance for this withdrawal :(");
+            }
+
+            account.setBalance(account.getBalance() - withdrawalUpdate.getAmount());
+            originalWithdrawal.setAmount(withdrawalUpdate.getAmount());
+            accountRepo.save(account);
+        }
+
+        if(withdrawalUpdate.getType() != null) {
+            originalWithdrawal.setType(withdrawalUpdate.getType());
+        }
+        if(withdrawalUpdate.getTransaction_date() != null) {
+            originalWithdrawal.setTransaction_date(withdrawalUpdate.getTransaction_date());
+        }
+        if(withdrawalUpdate.getStatus() != null) {
+            originalWithdrawal.setStatus(withdrawalUpdate.getStatus());
+        }
+        if(withdrawalUpdate.getPayer_id() != null) {
+            originalWithdrawal.setPayer_id(withdrawalUpdate.getPayer_id());
+        }
+        if(withdrawalUpdate.getMedium() != null) {
+            originalWithdrawal.setMedium(withdrawalUpdate.getMedium());
+        }
+        if(withdrawalUpdate.getDescription() != null) {
+            originalWithdrawal.setDescription(withdrawalUpdate.getDescription());
+        }
+
+        withdrawalRepo.save(originalWithdrawal);
     }
 
     //delete an existing withdrawal
     public void deleteExistingWithdrawal(Long withdrawalId) {
-        verifyWithdrawal(withdrawalId);
+        Withdrawal originalWithdrawal = withdrawalRepo.findById(withdrawalId)
+                .orElseThrow(() -> new ResourceNotFoundException("A withdrawal with an ID of #" + withdrawalId + " does not exist! :)"));
+        Account account = originalWithdrawal.getAccount();
+        //reverts back to its original balance
+        account.setBalance(account.getBalance() + originalWithdrawal.getAmount());
         withdrawalRepo.deleteById(withdrawalId);
     }
 

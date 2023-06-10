@@ -25,21 +25,33 @@ public class AccountController {
     public ResponseEntity<Iterable<Account>> getAllAccounts() {
         logger.info("Successfully retrieved all accounts");
         return new ResponseEntity<>(accountService.getAllAccounts(), HttpStatus.OK);
+
     }
+
+     //tested and works
+
 
     //HTTP method to get all accounts from a specific customer
     @GetMapping("/customers/{customerId}/accounts")
     public ResponseEntity<List<Account>> getAllAccountsByCustomerId(@PathVariable Long customerId) {
         logger.info("Fetched all accounts from customer ID #" + customerId);
         return new ResponseEntity<>(accountService.getAllAccountsByCustomerId(customerId), HttpStatus.OK);
+
     }
+
+     //tested and works
+
 
     //HTTP method to get an account by id
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Optional<Account>> getAnAccountById(@PathVariable Long accountId) {
         logger.info("Fetched account ID #" + accountId);
         return new ResponseEntity<>(accountService.getAnAccountById(accountId), HttpStatus.OK);
+
     }
+
+     //tested and works
+
 
     //HTTP method to create an account
     @PostMapping("/customers/{customerId}/accounts")
@@ -47,7 +59,11 @@ public class AccountController {
         accountService.createAnAccount(customerId, accountToBeCreated);
         logger.info("Successfully created an account for customer ID #" + customerId);
         return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
+
+     //tested and works
+
 
     //Http method to update a specific existing account
     @PutMapping("customers/{customerId}/accounts/{accountId}")
@@ -55,7 +71,10 @@ public class AccountController {
         accountService.updateExistingAccount(customerId, accountId, accountToBeUpdated);
         logger.info("Successfully updated account ID #" + accountId + " from customer ID #" + customerId);
         return new ResponseEntity<>(HttpStatus.OK);
+
     }
+
+     //tested and works
 
     //HTTP method to delete a specific existing account
     @DeleteMapping("/accounts/{accountId}")
@@ -63,6 +82,10 @@ public class AccountController {
         accountService.deleteExistingAccount(accountId);
         logger.info("Successfully deleted account ID #" + accountId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+
+
+
+    } //tested and works
+
 
 }
