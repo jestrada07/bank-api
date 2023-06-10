@@ -94,7 +94,11 @@ public class WithdrawalService {
 
     //delete an existing withdrawal
     public void deleteExistingWithdrawal(Long withdrawalId) {
-        verifyWithdrawal(withdrawalId);
+        Withdrawal originalWithdrawal = withdrawalRepo.findById(withdrawalId)
+                .orElseThrow(() -> new ResourceNotFoundException("A withdrawal with an ID of #" + withdrawalId + " does not exist! :)"));
+        Account account = originalWithdrawal.getAccount();
+        //reverts back to its original balance
+        account.setBalance(account.getBalance() + originalWithdrawal.getAmount());
         withdrawalRepo.deleteById(withdrawalId);
     }
 
