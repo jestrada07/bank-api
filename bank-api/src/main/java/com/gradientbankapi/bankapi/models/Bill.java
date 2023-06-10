@@ -29,7 +29,6 @@ public class Bill {
 
     private Double payment_amount;
 
-    private String account_id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
@@ -113,14 +112,6 @@ public class Bill {
 
     public void setPayment_amount(Double payment_amount) {
         this.payment_amount = payment_amount;
-    }
-
-    public String getAccount_id() {
-        return account_id;
-    }
-
-    public void setAccount_id(String account_id) {
-        this.account_id = account_id;
     }
 
     public Account getAccount() {

@@ -13,7 +13,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-
 import javax.validation.constraints.NotEmpty;
 
 @Entity
@@ -34,9 +33,8 @@ public class Withdrawal {
     private double amount;
     @NotEmpty
     private String description;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "account_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Account account;
@@ -112,6 +110,5 @@ public class Withdrawal {
     public void setAccount(Account account) {
         this.account = account;
     }
-
 
 }

@@ -15,43 +15,49 @@ import java.util.Optional;
 public class CustomerService {
 
     @Autowired
-   private CustomerRepo customerRepo;
+    private CustomerRepo customerRepo;
 
     @Autowired
     private AccountRepo accountRepo;
 
-
-
-
-    public void createCustomer(Customer customer){
-        customerRepo.save(customer);
-
+    //get a customer that owns the specified account
+    public Optional<Account> getCustomerByAccountId(Long accountId) {
+        return accountRepo.findById(accountId);
     }
-    public Iterable<Customer> getAllCustomers(){
+
+    //get all customers
+    public Iterable<Customer> getAllCustomers() {
         return customerRepo.findAll();
     }
 
-    public void updateCustomer(Long id, Customer customer){
-        customer.setId(id);
-        customerRepo.save(customer);
-    }
-
-    public void deleteCustomer(Long id){
-        customerRepo.deleteById(id);
-    }
-
-    public Optional<Customer> findACustomerByCustomerId(Long customerId){
-
+    //get a customer by their ID
+    public Optional<Customer> getACustomerById(Long customerId) {
+        verifyCustomer(customerId);
         return customerRepo.findById(customerId);
     }
 
-    public Optional<Account> findACustomerByAccountId(Long accountId){
-       return accountRepo.findById(accountId);
+    //create a customer
+    public void createACustomer(Customer customerToBeCreated) {
+        customerRepo.save(customerToBeCreated);
     }
 
-    protected void checkIfCustomerExists(Long idOfCustomer) throws ResourceNotFoundException {
-        if (!(this.customerRepo.existsById(idOfCustomer))) {
-            throw (new ResourceNotFoundException("Customer ID " + idOfCustomer + " not found"));
+    //update a specific existing customer
+    public void updateExistingCustomer(Long customerId, Customer customerToBeUpdated) {
+        verifyCustomer(customerId);
+        customerToBeUpdated.setId(customerId);
+        customerRepo.save(customerToBeUpdated);
+    }
+
+    //delete a specific existing customer
+    public void deleteExistingCustomer(Long customerId) {
+        verifyCustomer(customerId);
+        customerRepo.deleteById(customerId);
+    }
+
+    protected void verifyCustomer(Long customerId) throws ResourceNotFoundException {
+        Optional<Customer> customer = customerRepo.findById(customerId);
+        if(customer.isEmpty()) {
+            throw new ResourceNotFoundException("A customer with an ID of #" + customerId + " does not exist! :O");
         }
     }
 
@@ -68,10 +74,5 @@ public class CustomerService {
         }
         throw (new ResourceNotFoundException("Customer with name " + FirstName + " " +  LastName + " not found"));
     }
-
-
-
-
-
 
 }
