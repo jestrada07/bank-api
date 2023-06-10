@@ -8,7 +8,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Deposit {
@@ -16,15 +18,16 @@ public class Deposit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotEmpty
+    @NotNull
     private TransactionType type;
     private String transaction_date;
     private StatusType status;
-    @NotEmpty
+    @NotNull
     private Long payee_id;
-    @NotEmpty
+    @NotNull
     private MediumType medium;
-    @NotEmpty
+    @NotNull
+    @Min(1)
     private double amount;
     @NotEmpty
     private String description;

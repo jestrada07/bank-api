@@ -29,7 +29,6 @@ public class Bill {
 
     private Double payment_amount;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -112,6 +111,17 @@ public class Bill {
 
     public void setPayment_amount(Double payment_amount) {
         this.payment_amount = payment_amount;
+    }
+
+    public Long getAccountId() {
+        return account.getId();
+    }
+
+    public void setAccountId(Long accountId) {
+        if(account == null){
+            account = new Account();
+        }
+        this.account.setId(accountId);
     }
 
     public Account getAccount() {

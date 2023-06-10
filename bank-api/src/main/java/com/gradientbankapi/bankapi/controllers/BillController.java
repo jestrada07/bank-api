@@ -46,7 +46,7 @@ public class BillController {
     }
 
     @DeleteMapping("/bills/{billId}")
-    public ResponseEntity<Void> deleteDeposit(@PathVariable Long billId){
+    public ResponseEntity<Void> deleteBill(@PathVariable Long billId){
         billService.deleteBill(billId);
         BillLogs.info("Bill deleted successfully");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
