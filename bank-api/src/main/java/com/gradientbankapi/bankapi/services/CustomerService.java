@@ -21,8 +21,8 @@ public class CustomerService {
     private AccountRepo accountRepo;
 
     //get a customer that owns the specified account
-    public Optional<Account> getCustomerByAccountId(Long accountId) {
-        return accountRepo.findById(accountId);
+    public Customer getCustomerByAccountId(Long accountId) {
+        return customerRepo.findById(accountId).orElse(null);
     }
 
     //get all customers
