@@ -22,10 +22,7 @@ public class BillService {
     @Autowired
     private AccountRepo accountRepo;
 
-
     //post
-
-
     @Transactional
     public void createBill(Long accountId, Bill bill) {
         // Find account or throw error if not found
@@ -46,6 +43,7 @@ public class BillService {
         }
 
         account.setBalance(account.getBalance() - bill.getPayment_amount()); // Decrease account balance by the bill amount
+
         accountRepo.save(account); // Save updated account to the database
 
         bill.setAccount(account);
@@ -67,9 +65,8 @@ public class BillService {
     }
 
     //get all bills by account id
-    public Optional<Bill> showAllBillsForAccount(Long AccountId) {
-        verifyBill(AccountId);
-        return billRepo.findByAccount(AccountId);
+    public List<Bill> showAllBillsForAccount(Long accountId) {
+        return billRepo.findByAccount(accountId);
     }
 
     //Updates bill

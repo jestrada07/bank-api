@@ -31,14 +31,21 @@ public class CustomerController {
     public ResponseEntity<Iterable<Customer>> getAllCustomers() {
         logger.info("Successfully retrieved all customers");
         return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
-    } //tested and works
+    }
+
+ //tested and works
+
 
     //HTTP method to get a customer by their ID
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<Optional<Customer>> getACustomerById(@PathVariable Long customerId) {
         logger.info("Fetched customer ID #" + customerId);
         return new ResponseEntity<>(customerService.getACustomerById(customerId), HttpStatus.OK);
+
+
+
     } //tested and works
+
 
     //HTTP method to create a customer
     @PostMapping("/customers")
@@ -46,7 +53,11 @@ public class CustomerController {
         customerService.createACustomer(customerToBeCreated);
         logger.info("Successfully created a customer");
         return new ResponseEntity<>(HttpStatus.CREATED);
-    } //tested and works
+
+    }
+
+     //tested and works
+
 
     //HTTP method to update a specific existing customer
     @PutMapping("/customers/{customerId}")
@@ -54,7 +65,11 @@ public class CustomerController {
         customerService.updateExistingCustomer(customerId, customerToBeUpdated);
         logger.info("Successfully updated customer ID #" + customerId);
         return new ResponseEntity<>(HttpStatus.OK);
-    } //tested and works
+
+    }
+
+     //tested and works
+
 
     //HTTP method to delete a specific existing customer
     @DeleteMapping("/customers/{customerId}")
@@ -62,6 +77,8 @@ public class CustomerController {
         customerService.deleteExistingCustomer(customerId);
         logger.info("Successfully deleted customer ID #" + customerId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     } //tested and works
+
 
 }

@@ -21,19 +21,19 @@ public class BillController {
     private static final Logger BillLogs = LoggerFactory.getLogger(BillController.class);
 
     @GetMapping("/accounts/{accountId}/bills")
-    public Optional<Bill> getBillThroughAccount(@PathVariable Long accountId, @RequestBody Bill bill){
+    public List<Bill> getBillThroughAccount(@PathVariable Long accountId){
         BillLogs.info("Existing Bills for Account found");
         return billService.showAllBillsForAccount(accountId);
     }
 
     @GetMapping("/customers/{CustomerId}/bills")
-    public List<Bill> getBillThroughCustomer(@PathVariable Long CustomerId, @RequestBody Bill bill){
+    public List<Bill> getBillThroughCustomer(@PathVariable Long CustomerId){
         BillLogs.info("Existing Bills for Customer found");
         return billService.showAllBillsForCustomer(CustomerId);
     }
 
     @GetMapping("/bills/{billId}")
-    public Optional<Bill> getBillThroughBillId(@PathVariable Long billId, @RequestBody Bill bill){
+    public Optional<Bill> getBillThroughBillId(@PathVariable Long billId){
         BillLogs.info("Bill Id found");
         return billService.showBillById(billId);
     }
@@ -43,6 +43,13 @@ public class BillController {
         BillLogs.info("Bill successfully constructed for account");
         billService.createBill(accountId, bill);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/bills/{billId}")
+    public ResponseEntity<Void> updatingBill(@PathVariable Long billId, @RequestBody Bill bill){
+        BillLogs.info("Bill Id found");
+        billService.updateBill(billId, bill);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/bills/{billId}")
