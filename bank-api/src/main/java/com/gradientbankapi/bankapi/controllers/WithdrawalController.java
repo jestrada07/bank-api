@@ -48,7 +48,7 @@ public class WithdrawalController {
         withdrawalService.updateExistingWithdrawal(withdrawalId, withdrawalToBeUpdated);
         logger.info("Successfully updated withdrawal ID #" + withdrawalId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    } //tested and works
 
     //HTTP method to delete an existing withdrawal
     @DeleteMapping("/withdrawals/{withdrawalId}")
