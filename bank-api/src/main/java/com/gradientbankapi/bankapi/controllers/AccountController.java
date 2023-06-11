@@ -141,7 +141,7 @@ public class AccountController {
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         try {
 
-            CodeFactorWithoutData success = new CodeFactorWithoutData(204, "Account #" + accountId + " successfully deleted!");
+            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Account #" + accountId + " successfully deleted!");
             accountService.deleteExistingAccount(accountId);
             logger.info("Successfully deleted Account #" + accountId + "!");
             return new ResponseEntity<>(success, HttpStatus.NO_CONTENT);
