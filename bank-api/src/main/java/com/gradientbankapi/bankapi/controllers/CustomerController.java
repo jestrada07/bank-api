@@ -80,7 +80,7 @@ public class CustomerController {
         }
     }
 
-     //tested and works
+     //tested and works except no address
 
 
     //HTTP method to update a specific existing customer
@@ -98,7 +98,7 @@ public class CustomerController {
         }
     }
 
-     //tested and works
+     //tested and works without address
 
 
     //HTTP method to delete a specific existing customer

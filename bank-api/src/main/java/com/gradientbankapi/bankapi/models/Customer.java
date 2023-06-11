@@ -34,16 +34,16 @@ public class Customer {
         return first_name;
     }
 
-    public void setFirst_Name(String first_Name) {
-        this.first_name = first_Name;
+    public void setFirst_Name(String first_name) {
+        this.first_name = first_name;
     }
 
     public String getLast_Name() {
         return last_name;
     }
 
-    public void setLast_Name(String last_Name) {
-        this.last_name = last_Name;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public Set<Address> getAddress() {
