@@ -20,31 +20,44 @@ public class BillController {
 
     private static final Logger BillLogs = LoggerFactory.getLogger(BillController.class);
 
+    //not working
     @GetMapping("/accounts/{accountId}/bills")
-    public Optional<Bill> getBillThroughAccount(@PathVariable Long accountId, @RequestBody Bill bill){
+    public ResponseEntity<List<Bill>> getBillThroughAccount(@PathVariable Long accountId){
         BillLogs.info("Existing Bills for Account found");
-        return billService.showAllBillsForAccount(accountId);
+        return new ResponseEntity<>(billService.showAllBillsForAccount(accountId), HttpStatus.OK);
     }
 
-    @GetMapping("/customers/{CustomerId}/bills")
-    public List<Bill> getBillThroughCustomer(@PathVariable Long CustomerId, @RequestBody Bill bill){
+    //not working
+    @GetMapping("/customers/{customerId}/bills")
+    public ResponseEntity<List<Bill>> getBillThroughCustomer(@PathVariable Long customerId){
         BillLogs.info("Existing Bills for Customer found");
-        return billService.showAllBillsForCustomer(CustomerId);
+        return new ResponseEntity<>(billService.showAllBillsForCustomer(customerId), HttpStatus.OK);
     }
 
+    //works
     @GetMapping("/bills/{billId}")
-    public Optional<Bill> getBillThroughBillId(@PathVariable Long billId, @RequestBody Bill bill){
+    public ResponseEntity<Optional<Bill>> getBillThroughBillId(@PathVariable Long billId){
         BillLogs.info("Bill Id found");
-        return billService.showBillById(billId);
+        return new ResponseEntity<>(billService.showBillById(billId), HttpStatus.OK);
     }
 
-//    @PostMapping("/accounts/{accountId}/bills")
-//    public ResponseEntity<Void> createBillForAccount(@PathVariable Long accountId, @RequestBody Bill bill){
-//        BillLogs.info("Bill successfully constructed for account");
-//        billService.createBill(bill);
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
+    //works
+    @PostMapping("/accounts/{accountId}/bills")
+    public ResponseEntity<Void> createBillForAccount(@PathVariable Long accountId, @RequestBody Bill bill){
+        BillLogs.info("Bill successfully constructed for account");
+        billService.createBill(accountId, bill);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
+    //not working
+    @PutMapping("/bills/{billId}")
+    public ResponseEntity<Void> updatingBill(@PathVariable Long billId, @RequestBody Bill bill){
+        BillLogs.info("Bill Id found");
+        billService.updateBill(billId, bill);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //working
     @DeleteMapping("/bills/{billId}")
     public ResponseEntity<Void> deleteBill(@PathVariable Long billId){
         billService.deleteBill(billId);
