@@ -1,5 +1,8 @@
 package com.gradientbankapi.bankapi.controllers;
 
+import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
+import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
+import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Withdrawal;
 import com.gradientbankapi.bankapi.services.WithdrawalService;
 import org.slf4j.Logger;
@@ -10,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class WithdrawalController {
@@ -22,40 +24,84 @@ public class WithdrawalController {
 
     //HTTP method to get all withdrawals for a specific account
     @GetMapping("/accounts/{accountId}/withdrawals")
-    public ResponseEntity<List<Withdrawal>> getAllWithdrawalsByAccountId(@PathVariable Long accountId) {
-        logger.info("Fetched all withdrawals from account ID #" + accountId);
-        return new ResponseEntity<>(withdrawalService.getAllWithdrawalsByAccountId(accountId), HttpStatus.OK);
+    public ResponseEntity<Object> getAllWithdrawalsByAccountId(@PathVariable Long accountId) {
+        List<Withdrawal> withdrawals = withdrawalService.getAllWithdrawalsByAccountId(accountId);
+        if(withdrawals.isEmpty()) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Error! Cannot retrieve all withdrawals; Account #" + accountId + " does not exist!");
+            logger.info("Error! Cannot retrieve all withdrawals; Account #" + accountId + " does not exist!");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+        CodeMessageFactor success = new CodeMessageFactor(200,
+                "Successfully retrieved all withdrawals from account #" + accountId, withdrawals);
+        logger.info("Successfully retrieved all withdrawals from account #" + accountId);
+        return new ResponseEntity<>(success, HttpStatus.OK);
     } //tested and works
 
     //HTTP method to get a withdrawal by id
     @GetMapping("/withdrawals/{withdrawalId}")
-    public ResponseEntity<Optional<Withdrawal>> getAWithdrawalById(@PathVariable Long withdrawalId) {
-        logger.info("Fetched withdrawal ID #" + withdrawalId);
-        return new ResponseEntity<>(withdrawalService.getAWithdrawalById(withdrawalId), HttpStatus.OK);
+    public ResponseEntity<Object> getAWithdrawalById(@PathVariable Long withdrawalId) {
+        try {
+            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved withdrawal type #" + withdrawalId,
+                    withdrawalService.getAWithdrawalById(withdrawalId));
+            logger.info("Successfully retrieved withdrawal type #" + withdrawalId);
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Error! Withdrawal type #" + withdrawalId + " does not exist!");
+            logger.info("Error! Withdrawal type #" + withdrawalId + " does not exist!");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
     } //tested and works
 
     //HTTP method to create a withdrawal
     @PostMapping("/accounts/{accountId}/withdrawals")
-    public ResponseEntity<Void> createAWithdrawal(@PathVariable Long accountId, @RequestBody Withdrawal withdrawalToBeCreated) {
-        withdrawalService.createAWithdrawal(accountId, withdrawalToBeCreated);
-        logger.info("Successfully created a withdrawal for account ID #" + accountId);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Object> createAWithdrawal(@PathVariable Long accountId, @RequestBody Withdrawal withdrawalToBeCreated) {
+        try {
+            CodeMessageFactor success = new CodeMessageFactor(201, "Withdrawal created successfully!",
+                    withdrawalService.createAWithdrawal(accountId, withdrawalToBeCreated));
+            logger.info("Withdrawal created successfully!");
+            return new ResponseEntity<>(success, HttpStatus.CREATED);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error! Cannot create a withdrawal!");
+            logger.info("Error! Cannot create a withdrawal!");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
     } //tested and works
 
     //HTTP method to update a specific existing withdrawal
     @PutMapping("/withdrawals/{withdrawalId}")
-    public ResponseEntity<Void> updateExistingWithdrawal(@PathVariable Long withdrawalId, @RequestBody Withdrawal withdrawalToBeUpdated) {
-        withdrawalService.updateExistingWithdrawal(withdrawalId, withdrawalToBeUpdated);
-        logger.info("Successfully updated withdrawal ID #" + withdrawalId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Object> updateExistingWithdrawal(@PathVariable Long withdrawalId, @RequestBody Withdrawal withdrawalToBeUpdated) {
+        try {
+            CodeMessageFactor success = new CodeMessageFactor(202, "Withdrawal type #" + withdrawalId + " updated successfully!",
+                    withdrawalService.updateExistingWithdrawal(withdrawalId, withdrawalToBeUpdated));
+            logger.info("Withdrawal type #" + withdrawalId + " updated successfully!");
+            return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
+        } catch (ResourceNotFoundException e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Withdrawal type #" + withdrawalId + " does not exist!");
+            logger.info("Error! Withdrawal type #" + withdrawalId + " does not exist!");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
+                    "Error! Withdrawal type #" + withdrawalId + " couldn't be updated due to insufficient funds!");
+            logger.info("Error! Cannot update withdrawal type #" + withdrawalId + " due to insufficient funds!");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
     } //tested and works
 
     //HTTP method to delete an existing withdrawal
     @DeleteMapping("/withdrawals/{withdrawalId}")
-    public ResponseEntity<Void> deleteExistingWithdrawal(@PathVariable Long withdrawalId) {
-        withdrawalService.deleteExistingWithdrawal(withdrawalId);
-        logger.info("Successfully deleted withdrawal ID #" + withdrawalId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Object> deleteExistingWithdrawal(@PathVariable Long withdrawalId) {
+        try {
+            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Withdrawal type #" + withdrawalId + " successfully deleted!");
+            withdrawalService.deleteExistingWithdrawal(withdrawalId);
+            logger.info("Successfully deleted withdrawal type #" + withdrawalId + "!");
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Withdrawal type #" + withdrawalId + " does not exist!");
+            logger.info("Error! Cannot delete withdrawal type #" + withdrawalId);
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
     } //tested and works
 
 }
