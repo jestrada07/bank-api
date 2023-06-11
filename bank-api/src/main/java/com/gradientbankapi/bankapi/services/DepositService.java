@@ -2,6 +2,7 @@ package com.gradientbankapi.bankapi.services;
 
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
+import com.gradientbankapi.bankapi.models.Customer;
 import com.gradientbankapi.bankapi.models.Deposit;
 import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.DepositRepo;

@@ -20,9 +20,13 @@ public class CustomerService {
     @Autowired
     private AccountRepo accountRepo;
 
+    @Autowired
+    private AccountService accountService;
+
     //get a customer that owns the specified account
-    public Customer getCustomerByAccountId(Long accountId) {
-        return customerRepo.findById(accountId).orElse(null);
+    public Optional<Customer> getCustomerByAccountId(Long accountId) {
+        Long customerId = accountService.getAnAccountById(accountId).get().getId();
+        return customerRepo.findById(customerId);
     }
 
     //get all customers
@@ -37,15 +41,15 @@ public class CustomerService {
     }
 
     //create a customer
-    public void createACustomer(Customer customerToBeCreated) {
-        customerRepo.save(customerToBeCreated);
+    public Customer createACustomer(Customer customerToBeCreated) {
+        return customerRepo.save(customerToBeCreated);
     }
 
     //update a specific existing customer
-    public void updateExistingCustomer(Long customerId, Customer customerToBeUpdated) {
+    public Customer updateExistingCustomer(Long customerId, Customer customerToBeUpdated) {
         verifyCustomer(customerId);
         customerToBeUpdated.setId(customerId);
-        customerRepo.save(customerToBeUpdated);
+        return customerRepo.save(customerToBeUpdated);
     }
 
     //delete a specific existing customer
