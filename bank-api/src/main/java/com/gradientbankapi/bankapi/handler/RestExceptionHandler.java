@@ -44,7 +44,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     //The @ResponseBody annotation contains the response content that has been sent from the server
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         CodeMessageFactor codeMessageSource = new CodeMessageFactor(status.value(), ex.getMessage());
-        return handleExceptionInternal(ex, codeMessageSource, headers, status, request);
+        return super.handleExceptionInternal(ex, codeMessageSource, headers, status, request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
