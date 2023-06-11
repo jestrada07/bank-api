@@ -7,9 +7,11 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-public class    Account {
+public class  Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,6 +29,7 @@ public class    Account {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Customer customer;
+
 
     public Long getId() {
         return id;
@@ -75,4 +78,5 @@ public class    Account {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
 }
