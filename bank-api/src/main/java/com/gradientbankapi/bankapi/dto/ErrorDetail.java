@@ -29,6 +29,6 @@ public class ErrorDetail {
         public void setDeveloperMessage(String developerMessage) {this.developerMessage = developerMessage;}
 
         public Map<String, List<ValidationError>> getErrors() {return errors;}
-        public void setErrors(Map<String, List<ValidationError>> errors) {this.errors = errors;
+        public void setErrors(Map<String, List<ValidationError>> errors) {this.errors = errors;}
 
 }

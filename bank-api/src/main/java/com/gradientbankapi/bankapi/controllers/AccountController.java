@@ -1,5 +1,6 @@
 package com.gradientbankapi.bankapi.controllers;
 
+import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.services.AccountService;
 import org.slf4j.Logger;
@@ -78,12 +79,20 @@ public class AccountController {
 
     //HTTP method to delete a specific existing account
     @DeleteMapping("/accounts/{accountId}")
-    public ResponseEntity<Void> deleteExistingAccount(@PathVariable Long accountId) {
-        accountService.deleteExistingAccount(accountId);
-        logger.info("Successfully deleted account ID #" + accountId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-
+    public ResponseEntity<Object> deleteExistingAccount(@PathVariable Long accountId) {
+//        accountService.deleteExistingAccount(accountId);
+//        logger.info("Successfully deleted account ID #" + accountId);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            CodeFactorWithoutData success = new CodeFactorWithoutData(204, "Account #" + accountId + " successfully deleted!");
+            accountService.deleteExistingAccount(accountId);
+            logger.info("Successfully deleted Account #" + accountId + "!");
+            return new ResponseEntity<>(success, HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Account #" + accountId + " does not exist!");
+            logger.info("Error! Cannot delete Account #" + accountId);
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
 
     } //tested and works
 

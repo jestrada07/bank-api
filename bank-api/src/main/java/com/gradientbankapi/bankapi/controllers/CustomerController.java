@@ -105,10 +105,10 @@ public class CustomerController {
     @DeleteMapping("/customers/{customerId}")
     public ResponseEntity<Object> deleteExistingCustomer(@PathVariable Long customerId) {
         try {
-            CodeFactorWithoutData success = new CodeFactorWithoutData(204, "Customer #" + customerId + " successfully deleted!");
+            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Customer #" + customerId + " successfully deleted!");
             customerService.deleteExistingCustomer(customerId);
             logger.info("Successfully deleted customer #" + customerId + "!");
-            return new ResponseEntity<>(success, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(success, HttpStatus.OK);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer #" + customerId + " does not exist!");
             logger.info("Error! Cannot delete customer #" + customerId);
