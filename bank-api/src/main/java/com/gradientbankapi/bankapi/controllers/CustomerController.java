@@ -2,7 +2,6 @@ package com.gradientbankapi.bankapi.controllers;
 
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
-import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Address;
 import com.gradientbankapi.bankapi.models.Customer;
 import com.gradientbankapi.bankapi.services.CustomerService;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -30,20 +28,22 @@ public class CustomerController {
         Customer customer = customerService.getCustomerByAccountId(accountId);
         if (customer == null) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
-                    "Error! Couldn't find customer with an account ID of #" + accountId);
+                    "Error! Could not find customer; account #" + accountId + " does not exist!");
+            logger.info("Error! Could not find customer; account #" + accountId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-        CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer", customer);
+        CodeMessageFactor success = new CodeMessageFactor(200,
+                "Successfully retrieved customer from account #" + accountId + "!", customer);
+        logger.info("Successfully retrieved customer from account #" + accountId + "!");
         return new ResponseEntity<>(success, HttpStatus.OK);
-    }
-
-    //Tested and works
+    } //tested and works
 
     //HTTP method to retrieve all customers
     @GetMapping("/customers")
     public ResponseEntity<Object> getAllCustomers() {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved all customers", customerService.getAllCustomers());
+            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved all customers",
+                    customerService.getAllCustomers());
             logger.info("Successfully retrieved all customers!");
             return new ResponseEntity<>(success, HttpStatus.OK);
         } catch (Exception e) {
@@ -51,16 +51,14 @@ public class CustomerController {
             logger.info("Error! Cannot fetch customers!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-    }
-
- //tested and works
-
+    } //tested and works
 
     //HTTP method to get a customer by their ID
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<Object> getACustomerById(@PathVariable Long customerId) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer #" + customerId, customerService.getACustomerById(customerId));
+            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer #" + customerId,
+                    customerService.getACustomerById(customerId));
             logger.info("Successfully retrieved customer #" + customerId);
             return new ResponseEntity<>(success, HttpStatus.OK);
         } catch (Exception e) {
@@ -68,15 +66,11 @@ public class CustomerController {
             logger.info("Error! Customer #" + customerId + " does not exist");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-        //tested and works
-    }
+    } //tested and works
 
     //HTTP method to create a customer
     @PostMapping("/customers")
     public ResponseEntity<Object> createACustomer(@RequestBody Customer customerToBeCreated) {
-
-
-
         try {
             Set<Address> addresses = customerToBeCreated.getAddress();
             if (addresses != null) {
@@ -94,28 +88,22 @@ public class CustomerController {
             logger.info("Error! Cannot create customer!");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
-    }
-
-     //tested and works
-
+    } //tested and works
 
     //HTTP method to update a specific existing customer
     @PutMapping("/customers/{customerId}")
     public ResponseEntity<Object> updateExistingCustomer(@PathVariable Long customerId, @RequestBody Customer customerToBeUpdated) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Customer #" + customerId + " updated successfully!",
+            CodeMessageFactor success = new CodeMessageFactor(202, "Customer #" + customerId + " updated successfully!",
                     customerService.updateExistingCustomer(customerId, customerToBeUpdated));
             logger.info("Customer #" + customerId + " updated successfully!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer #" + customerId + " does not exist!");
             logger.info("Error! Cannot update customer #" + customerId);
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-    }
-
-     //tested and works
-
+    } //tested and works
 
     //HTTP method to delete a specific existing customer
     @DeleteMapping("/customers/{customerId}")
@@ -131,17 +119,13 @@ public class CustomerController {
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
     } //tested and works
-    //Couldn't figure out how to get the successful delete message to respond but, I don't think
-    //it's necessary since it's not in the book. Everything here works fine except for the top method.
 
     @GetMapping("/customer")  //search functionality that searches a customer by its name
     public ResponseEntity<Object> getAllOrGetCustomerByName(@RequestParam(value = "name")  String FirstName) {
-        return (new ResponseEntity<>(this.customerService.getCustomerByName(FirstName), HttpStatus.OK));
-
+        CodeMessageFactor success = new CodeMessageFactor(200, "Customer name '" + FirstName + "' successfully retrieved!",
+                customerService.getCustomerByName(FirstName));
+        logger.info("Customer name '" + FirstName + "' successfully retrieved!");
+        return (new ResponseEntity<>(success, HttpStatus.OK));
     } // tested and works
-
-
-
-
 
 }

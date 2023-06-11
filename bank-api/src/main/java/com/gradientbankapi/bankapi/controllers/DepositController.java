@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class DepositController {
@@ -53,27 +52,26 @@ public class DepositController {
 
     @GetMapping("/accounts/{accountId}/deposits")
     public ResponseEntity<Object> getDepositsByAccount(@PathVariable Long accountId) {
-        try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Fetched deposits from account #" + accountId + "!",
-                    depositService.getDepositsForAccount(accountId));
-            logger.info("Successfully fetched deposits from account #" + accountId + "!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch (Exception e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
-                    "Error fetching deposits from account #" + accountId + "!");
-            logger.info("Error! Cannot fetched deposits from account #" + accountId + "!");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        List<Deposit> deposits = depositService.getDepositsForAccount(accountId);
+        if(deposits.isEmpty()) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
+            logger.info("Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+        CodeMessageFactor success = new CodeMessageFactor(200,
+                "Successfully retrieved all deposits from account #" + accountId, deposits);
+        logger.info("Successfully retrieved all deposits from account #" + accountId);
+        return new ResponseEntity<>(success, HttpStatus.OK);
     }// This is good
-
 
     @PutMapping("/deposits/{depositId}")
     public ResponseEntity<Object> updateDeposit (@PathVariable Long depositId, @RequestBody Deposit deposit) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Deposit type #" + depositId + " updated successfully!",
+            CodeMessageFactor success = new CodeMessageFactor(202, "Deposit type #" + depositId + " updated successfully!",
                     depositService.updateDeposit(depositId, deposit));
             logger.info("Deposit type #" + depositId + " updated successfully!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Deposit type #" + depositId + " does not exist!");
             logger.info("Error! Cannot update deposit type #" + depositId);
