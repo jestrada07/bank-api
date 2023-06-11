@@ -1,6 +1,9 @@
 package com.gradientbankapi.bankapi.handler;
 
+
+
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
+
 import com.gradientbankapi.bankapi.dto.ErrorDetail;
 import com.gradientbankapi.bankapi.dto.ValidationError;
 import com.gradientbankapi.bankapi.exceptions.NoSuchPropertyException;
@@ -15,6 +18,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -30,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Autowired
     private MessageSource messageSource;
-  
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseBody
     //The @ResponseBody annotation contains the response content that has been sent from the server
@@ -90,8 +98,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setTimeStamp(new Date().getTime());
         errorDetail.setStatus((short) status.value());
         errorDetail.setTitle("Message Not Readable");
+        errorDetail.setDetail(httpMessageNotReadableException.getMessage());
         errorDetail.setDeveloperMessage(httpMessageNotReadableException.getClass().getName());
         return super.handleExceptionInternal(httpMessageNotReadableException, errorDetail, headers, status, request);
     }
 
 }
+
+
+
+

@@ -2,6 +2,7 @@ package com.gradientbankapi.bankapi.controllers;
 
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
+import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Customer;
 import com.gradientbankapi.bankapi.services.CustomerService;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class CustomerController {
@@ -22,7 +25,7 @@ public class CustomerController {
     //HTTP method to retrieve a customer by their specified account
     @GetMapping("/accounts/{accountId}/customer")
     public ResponseEntity<?> getCustomerByAccountId(@PathVariable Long accountId) {
-        Customer customer = customerService.getCustomerByAccountId(accountId).orElse(null);
+        Customer customer = customerService.getCustomerByAccountId(accountId);
         if (customer == null) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
                     "Error! Couldn't find customer with an account ID of #" + accountId);
@@ -31,6 +34,7 @@ public class CustomerController {
         CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer", customer);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
+
     //This method above is giving me some problems. Everytime I tried to get the account ID for the customer,
     //it's still giving me the error response. Most other methods in this class work well.
 
@@ -117,5 +121,15 @@ public class CustomerController {
     } //tested and works
     //Couldn't figure out how to get the successful delete message to respond but, I don't think
     //it's necessary since it's not in the book. Everything here works fine except for the top method.
+
+    @GetMapping("/customer")  //search functionality that searches a customer by its name
+    public ResponseEntity<Object> getAllOrGetAccountByNickName(@RequestParam(value = "name")  String FirstName) {
+        return (new ResponseEntity<>(this.customerService.getCustomerByName(FirstName), HttpStatus.OK));
+
+    } // tested and works
+
+
+
+
 
 }
