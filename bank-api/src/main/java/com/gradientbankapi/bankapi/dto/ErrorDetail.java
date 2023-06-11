@@ -32,8 +32,9 @@ public class ErrorDetail {
         public Map<String, List<ValidationError>> getErrors() {return errors;}
         public void setErrors(Map<String, List<ValidationError>> errors) {this.errors = errors;}
 
-<<<<<<< HEAD
-=======
+
+}
+
         private String title;
         private int status;
         private String detail;
@@ -66,7 +67,6 @@ public class ErrorDetail {
         public String getDeveloperMessage() {return developerMessage;}
         public void setDeveloperMessage(String developerMessage) {this.developerMessage = developerMessage;}
 
->>>>>>> master
 
         public void setDetail(String detail) {
                 this.detail = detail;
@@ -97,3 +97,4 @@ public class ErrorDetail {
 
         }
 }
+
