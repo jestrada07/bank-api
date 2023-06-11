@@ -22,6 +22,8 @@ public class BillService {
     @Autowired
     private AccountRepo accountRepo;
 
+
+    //Good
     //post
     @Transactional
     public void createBill(Long accountId, Bill bill) {
@@ -35,24 +37,24 @@ public class BillService {
         }
 
         // Fetch the customer associated with the account
-        Customer customer = account.getCustomer(); // This assumes that your Account entity has a getCustomer() method
+        Customer customer = account.getCustomer();
 
         // If the Customer is null, throw an exception or handle the case as required
-        if(customer == null) {
+        if (customer == null) {
             throw new IllegalStateException("The account with id " + accountId + " is not associated with any customer");
         }
 
         account.setBalance(account.getBalance() - bill.getPayment_amount()); // Decrease account balance by the bill amount
-
         accountRepo.save(account); // Save updated account to the database
 
         bill.setAccount(account);
-        bill.setCustomer(customer); // Set the associated customer to the bill
+        bill.setCustomer(customer);
         billRepo.save(bill);
     }
 
 
 
+    //Good
     //get bill by the bill id
     public Optional<Bill> showBillById(Long BillId) {
         verifyBill(BillId);
@@ -69,6 +71,7 @@ public class BillService {
         return billRepo.findByAccount(accountId);
     }
 
+    //Good
     //Updates bill
     public void updateBill(Long BillId, Bill bill){
         verifyBill(BillId);
@@ -76,6 +79,7 @@ public class BillService {
         billRepo.save(bill);
     }
 
+    //Good
     //Deletes bill
     public void deleteBill(Long BillId){
 

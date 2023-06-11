@@ -91,7 +91,11 @@ public class DepositService {
 
 
     public void deleteDeposit(Long depositId){
-        verifyDeposit(depositId);
+        Deposit originalDeposit = depositRepo.findById(depositId)
+                .orElseThrow(() -> new ResourceNotFoundException("The deposit with an ID of #" + depositId + " does not exist :("));
+        Account account = originalDeposit.getAccount();
+        //reverts back to its original balance
+        account.setBalance(account.getBalance() - originalDeposit.getAmount());
         depositRepo.deleteById(depositId);
     }
 
