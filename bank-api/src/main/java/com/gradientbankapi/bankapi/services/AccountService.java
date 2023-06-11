@@ -38,10 +38,10 @@ public class AccountService {
     }
 
     //create an account
-    public void createAnAccount(Long customerId, Account accountToBeCreated) {
+    public Account createAnAccount(Long customerId, Account accountToBeCreated) {
         Customer customer = customerRepo.findById(customerId).orElse(null);
         accountToBeCreated.setCustomer(customer);
-        accountRepo.save(accountToBeCreated);
+      return   accountRepo.save(accountToBeCreated);
     }
 
     //update a specific existing account
