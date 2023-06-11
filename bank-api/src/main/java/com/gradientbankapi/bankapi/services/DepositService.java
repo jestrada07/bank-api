@@ -22,6 +22,7 @@ public class DepositService {
     AccountRepo accountRepo;
 
 
+
     public void createDeposit(Long accountId, Deposit depositToBeCreated){
         Account account = accountRepo.findById(accountId).orElse(null);
 
@@ -31,8 +32,6 @@ public class DepositService {
 
         account.setBalance(account.getBalance() + depositToBeCreated.getAmount()); // Increase account balance by the deposit amount
         accountRepo.save(account); // Save updated account to the database
-
-        depositToBeCreated.setAccount(account); // Link the account with the deposit
         depositRepo.save(depositToBeCreated);
     }
 

@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface BillRepo extends CrudRepository<Bill, Long> {
+    List<Bill> findByAccount_CustomerId(Long customerId); // Updated method signature
 
-    List<Bill> findByAccount(Long accountId);
-
-    List<Bill> findAllByCustomer(Long customerId);
-
+    List<Bill> findByAccount_Id(Long accountId); // Updated method signature
 }
+
