@@ -113,10 +113,10 @@ public class AccountController {
 //        logger.info("Successfully updated account ID #" + accountId + " from customer ID #" + customerId);
 //        return new ResponseEntity<>(HttpStatus.OK);
         try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Account #" + accountId + " updated successfully!",
+            CodeMessageFactor success = new CodeMessageFactor(202, "Account #" + accountId + " updated successfully!",
                     accountService.updateExistingAccount(customerId, accountId, accountToBeUpdated));
             logger.info("Account #" + accountId + " updated successfully!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Account #" + accountId + " does not exist!");
             logger.info("Error! Cannot update Account #" + accountId);
@@ -144,7 +144,7 @@ public class AccountController {
             CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Account #" + accountId + " successfully deleted!");
             accountService.deleteExistingAccount(accountId);
             logger.info("Successfully deleted Account #" + accountId + "!");
-            return new ResponseEntity<>(success, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(success, HttpStatus.OK);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Account #" + accountId + " does not exist!");
             logger.info("Error! Cannot delete Account #" + accountId);
