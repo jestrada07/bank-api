@@ -100,7 +100,7 @@ public class BillController {
         try {
             CodeMessageFactor success = new CodeMessageFactor(202, "Accepted bill modification");
             BillLogs.info("Bill has been successfully modified");
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (Exception e){
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Bill ID does not exist");
             BillLogs.info("Could not find bill with the provided id");
@@ -115,9 +115,9 @@ public class BillController {
         BillLogs.info("Bill deleted successfully");
         //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         try {
-            CodeMessageFactor success = new CodeMessageFactor(204, "Content successfully deleted");
+            CodeMessageFactor success = new CodeMessageFactor(200, "Content successfully deleted");
             BillLogs.info("Bill has been successfully deleted");
-            return new ResponseEntity<>(success, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(success, HttpStatus.OK);
         } catch (Exception e){
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "This id does not exist in bills");
             BillLogs.info("The bill with the provided id does not exist");
