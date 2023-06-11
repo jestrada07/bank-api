@@ -1,5 +1,7 @@
 package com.gradientbankapi.bankapi.controllers;
 
+import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
+import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
 import com.gradientbankapi.bankapi.models.Deposit;
 import com.gradientbankapi.bankapi.services.DepositService;
 import org.slf4j.Logger;
@@ -21,40 +23,76 @@ public class DepositController {
     DepositService depositService;
 
     @PostMapping("/accounts/{accountId}/deposits")
-    public ResponseEntity<Void> createDeposit(@PathVariable Long accountId, @RequestBody Deposit depositToBeCreated) {
-        depositService.createDeposit(accountId, depositToBeCreated);
-        logger.info("Deposit created Successfully!");
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    public ResponseEntity<Object> createDeposit(@PathVariable Long accountId, @RequestBody Deposit depositToBeCreated) {
+        try {
+            CodeMessageFactor success = new CodeMessageFactor(201, "Deposit created successfully!",
+                    depositService.createDeposit(accountId, depositToBeCreated));
+            logger.info("Deposit created successfully!");
+            return new ResponseEntity<>(success, HttpStatus.CREATED);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error creating deposit!");
+            logger.info("Error! Cannot create a deposit!");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    } //This is good
 
     @GetMapping("/deposits/{depositId}")
-    public Optional<Deposit> getDepositById(@PathVariable Long depositId) {
-        logger.info("Successfully retrieved deposit!");
-        return depositService.getDepositById(depositId);
-    }
+    public ResponseEntity<Object> getDepositById(@PathVariable Long depositId) {
+        try {
+            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved deposit type #" + depositId,
+                    depositService.getDepositById(depositId));
+            logger.info("Successfully retrieved deposit type #" + depositId);
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Error! Deposit type #" + depositId + " does not exist!");
+            logger.info("Error! Deposit type #" + depositId + " does not exist");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+    } //This is good
 
     @GetMapping("/accounts/{accountId}/deposits")
-    public List<Deposit> getDepositsByAccount(@PathVariable Long accountId) {
-        logger.info("Successfully retrieved deposits for this account!");
-        return depositService.getDepositsForAccount(accountId);
-    }
+    public ResponseEntity<Object> getDepositsByAccount(@PathVariable Long accountId) {
+        try {
+            CodeMessageFactor success = new CodeMessageFactor(200, "Fetched deposits from account #" + accountId + "!",
+                    depositService.getDepositsForAccount(accountId));
+            logger.info("Successfully fetched deposits from account #" + accountId + "!");
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
+                    "Error fetching deposits from account #" + accountId + "!");
+            logger.info("Error! Cannot fetched deposits from account #" + accountId + "!");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+    }// This is good
 
 
     @PutMapping("/deposits/{depositId}")
-    public ResponseEntity<Void> updateDeposit (@PathVariable Long depositId, @RequestBody Deposit deposit){
-
-            depositService.updateDeposit(depositId, deposit);
-            logger.info("Deposit updated successfully!");
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Object> updateDeposit (@PathVariable Long depositId, @RequestBody Deposit deposit) {
+        try {
+            CodeMessageFactor success = new CodeMessageFactor(200, "Deposit type #" + depositId + " updated successfully!",
+                    depositService.updateDeposit(depositId, deposit));
+            logger.info("Deposit type #" + depositId + " updated successfully!");
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Deposit type #" + depositId + " does not exist!");
+            logger.info("Error! Cannot update deposit type #" + depositId);
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+    } //This is good
 
-        @DeleteMapping("/deposits/{depositId}")
-        public ResponseEntity<Void> deleteDeposit (@PathVariable Long depositId){
+    @DeleteMapping("/deposits/{depositId}")
+    public ResponseEntity<Object> deleteDeposit (@PathVariable Long depositId){
+        try {
+            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Deposit type #" + depositId + " successfully deleted!");
             depositService.deleteDeposit(depositId);
-            logger.info("Deposit deleted successfully!");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            logger.info("Successfully deleted deposit type #" + depositId + "!");
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Deposit type #" + depositId + " does not exist!");
+            logger.info("Error! Cannot delete deposit type #" + depositId);
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-
-
+    } //This is good
 
 }
