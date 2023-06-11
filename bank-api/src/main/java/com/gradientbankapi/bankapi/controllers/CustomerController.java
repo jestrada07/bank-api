@@ -3,6 +3,7 @@ package com.gradientbankapi.bankapi.controllers;
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
 import com.gradientbankapi.bankapi.models.Account;
+import com.gradientbankapi.bankapi.models.Address;
 import com.gradientbankapi.bankapi.models.Customer;
 import com.gradientbankapi.bankapi.services.CustomerService;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class CustomerController {
@@ -35,8 +37,7 @@ public class CustomerController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    //This method above is giving me some problems. Everytime I tried to get the account ID for the customer,
-    //it's still giving me the error response. Most other methods in this class work well.
+    //Tested and works
 
     //HTTP method to retrieve all customers
     @GetMapping("/customers")
@@ -73,18 +74,29 @@ public class CustomerController {
     //HTTP method to create a customer
     @PostMapping("/customers")
     public ResponseEntity<Object> createACustomer(@RequestBody Customer customerToBeCreated) {
+
+
+
         try {
+            Set<Address> addresses = customerToBeCreated.getAddress();
+            if (addresses != null) {
+                for (Address address : addresses) {
+                    address.setCustomer(customerToBeCreated);
+                }
+            }
+            customerService.createACustomer(customerToBeCreated);
             CodeMessageFactor success = new CodeMessageFactor(201, "Customer account created", customerService.createACustomer(customerToBeCreated));
             logger.info("Successfully created a customer!");
             return new ResponseEntity<>(success, HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error creating customer");
             logger.info("Error! Cannot create customer!");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     }
 
-     //tested and works except no address
+     //tested and works
 
 
     //HTTP method to update a specific existing customer
@@ -102,7 +114,7 @@ public class CustomerController {
         }
     }
 
-     //tested and works without address
+     //tested and works
 
 
     //HTTP method to delete a specific existing customer
@@ -123,7 +135,7 @@ public class CustomerController {
     //it's necessary since it's not in the book. Everything here works fine except for the top method.
 
     @GetMapping("/customer")  //search functionality that searches a customer by its name
-    public ResponseEntity<Object> getAllOrGetAccountByNickName(@RequestParam(value = "name")  String FirstName) {
+    public ResponseEntity<Object> getAllOrGetCustomerByName(@RequestParam(value = "name")  String FirstName) {
         return (new ResponseEntity<>(this.customerService.getCustomerByName(FirstName), HttpStatus.OK));
 
     } // tested and works

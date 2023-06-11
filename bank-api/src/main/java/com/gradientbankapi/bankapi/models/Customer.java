@@ -1,6 +1,11 @@
 package com.gradientbankapi.bankapi.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,16 +16,19 @@ public class Customer{
     private Long id;
 
     @NotEmpty
+    @Column(name = "first_Name")
     private String first_name;
 
     @NotEmpty
+    @Column(name = "last_Name")
     private String last_name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private Set<Address> address;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
+    @JsonManagedReference
+    private Set<Address> address = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    private Set<Account> accounts;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
+    private Set<Account> accounts = new HashSet<>();
 
     // Constructors, getters, and setters
 
@@ -36,7 +44,7 @@ public class Customer{
         return first_name;
     }
 
-    public void setFirst_Name(String first_name) {
+    public void setFirst_name(String first_name) {
         this.first_name = first_name;
     }
 
@@ -57,13 +65,13 @@ public class Customer{
     }
 
 
-    public Set<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
-    }
+//    public Set<Account> getAccounts() {
+//        return accounts;
+//    }
+//
+//    public void setAccounts(Set<Account> accounts) {
+//        this.accounts = accounts;
+//    }
 
 }
 
