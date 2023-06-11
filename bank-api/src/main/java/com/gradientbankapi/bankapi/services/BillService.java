@@ -29,10 +29,12 @@ public class BillService {
     @Transactional
     public Bill createBill(Long accountId, Bill bill) {
         // Find account or throw error if not found
+
         Account account = accountRepo.findById(accountId).orElse(null);
         if(account == null) {
             throw new ResourceNotFoundException();
         }
+
         // Check if account has enough balance to pay the bill
         if (account.getBalance() < bill.getPayment_amount()) {
             throw new IllegalStateException("The account with id " + accountId + " has insufficient balance to pay this bill");
