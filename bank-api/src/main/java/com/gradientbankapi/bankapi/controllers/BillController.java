@@ -26,21 +26,21 @@ public class BillController {
     public ResponseEntity<List<Bill>> getBillThroughAccount(@PathVariable Long accountId){
         BillLogs.info("Existing Bills for Account found");
         return new ResponseEntity<>(billService.showAllBillsForAccount(accountId), HttpStatus.OK);
-    }
+    } //tested and works
 
-    //not working
+
     @GetMapping("/customers/{customerId}/bills")
     public ResponseEntity<List<Bill>> getBillThroughCustomer(@PathVariable Long customerId){
         BillLogs.info("Existing Bills for Customer found");
         return new ResponseEntity<>(billService.showAllBillsForCustomer(customerId), HttpStatus.OK);
-    }
+    } //tested and works
 
     //works
     @GetMapping("/bills/{billId}")
     public ResponseEntity<Optional<Bill>> getBillThroughBillId(@PathVariable Long billId){
         BillLogs.info("Bill Id found");
         return new ResponseEntity<>(billService.showBillById(billId), HttpStatus.OK);
-    }
+    } //tested and works
 
     //works
     @PostMapping("/accounts/{accountId}/bills")
@@ -48,7 +48,7 @@ public class BillController {
         BillLogs.info("Bill successfully constructed for account");
         billService.createBill(accountId, bill);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    } //tested and works
 
     //not working
     @PutMapping("/bills/{billId}")
@@ -56,7 +56,7 @@ public class BillController {
         BillLogs.info("Bill Id found");
         billService.updateBill(billId, bill);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    } //tested and works
 
     //working
     @DeleteMapping("/bills/{billId}")
@@ -64,5 +64,5 @@ public class BillController {
         billService.deleteBill(billId);
         BillLogs.info("Bill deleted successfully");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    } //tested and works
 }

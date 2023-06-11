@@ -1,6 +1,9 @@
 package com.gradientbankapi.bankapi.models;
 //POJO - plain old java object
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
@@ -23,7 +26,11 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonBackReference
     private Customer customer;
+
+    public Address() {
+    }
 
     public Customer getCustomer() {
         return customer;
