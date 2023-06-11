@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface BillRepo extends CrudRepository<Bill, Long> {
+
     List<Bill> findByAccount_CustomerId(Long customerId); // Updated method signature
 
     List<Bill> findByAccount_Id(Long accountId); // Updated method signature

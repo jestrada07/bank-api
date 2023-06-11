@@ -30,7 +30,7 @@ public class BillService {
     public void createBill(Long accountId, Bill bill) {
         // Find account or throw error if not found
         Account account = accountRepo.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("The account with id " + accountId + " does not exist"));
+                .orElse(null);
 
         // Check if account has enough balance to pay the bill
         if (account.getBalance() < bill.getPayment_amount()) {
