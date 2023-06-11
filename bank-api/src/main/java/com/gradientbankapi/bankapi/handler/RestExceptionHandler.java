@@ -90,6 +90,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setTimeStamp(new Date().getTime());
         errorDetail.setStatus((short) status.value());
         errorDetail.setTitle("Message Not Readable");
+        errorDetail.setDetail(httpMessageNotReadableException.getMessage());
         errorDetail.setDeveloperMessage(httpMessageNotReadableException.getClass().getName());
         return super.handleExceptionInternal(httpMessageNotReadableException, errorDetail, headers, status, request);
     }
