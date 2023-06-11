@@ -64,12 +64,12 @@ public class BillService {
 
     //get all bills by customer id
     public List<Bill> showAllBillsForCustomer(Long customerId) {
-        return billRepo.findAllByCustomer(customerId);
+        return billRepo.findByAccount_CustomerId(customerId);
     }
 
-    //get all bills by account id
+    // get all bills by account id
     public List<Bill> showAllBillsForAccount(Long accountId) {
-        return billRepo.findByAccount(accountId);
+        return billRepo.findByAccount_Id(accountId);
     }
 
     //Good

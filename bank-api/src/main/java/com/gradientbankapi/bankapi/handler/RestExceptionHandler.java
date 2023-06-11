@@ -38,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Autowired
     private MessageSource messageSource;
-  
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseBody
     //The @ResponseBody annotation contains the response content that has been sent from the server
@@ -98,6 +98,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setTimeStamp(new Date().getTime());
         errorDetail.setStatus((short) status.value());
         errorDetail.setTitle("Message Not Readable");
+        errorDetail.setDetail(httpMessageNotReadableException.getMessage());
         errorDetail.setDeveloperMessage(httpMessageNotReadableException.getClass().getName());
         return super.handleExceptionInternal(httpMessageNotReadableException, errorDetail, headers, status, request);
     }
