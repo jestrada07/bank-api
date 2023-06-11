@@ -37,7 +37,7 @@ public class Withdrawal {
     @NotNull
     @Min(0)
     private double amount;
-    @NotEmpty
+    @NotNull
     private String description;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)

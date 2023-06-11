@@ -47,7 +47,7 @@ public class AccountService {
     }
 
     //update a specific existing account
-    public void updateExistingAccount(Long customerId, Long accountId, Account accountToBeUpdated) {
+    public Account updateExistingAccount(Long customerId, Long accountId, Account accountToBeUpdated) {
         verifyAccount(accountId);
         Customer customer = customerRepo.findById(customerId).orElse(null);
         Account account = accountRepo.findById(accountId).orElse(null);
@@ -58,7 +58,7 @@ public class AccountService {
             account.setBalance(accountToBeUpdated.getBalance());
         }
         accountToBeUpdated.setCustomer(customer);
-        accountRepo.save(accountToBeUpdated);
+       return accountRepo.save(accountToBeUpdated);
     }
 
     //delete a specific existing account

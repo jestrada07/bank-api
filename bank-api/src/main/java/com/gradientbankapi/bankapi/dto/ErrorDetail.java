@@ -32,6 +32,5 @@ public class ErrorDetail {
         public Map<String, List<ValidationError>> getErrors() {return errors;}
         public void setErrors(Map<String, List<ValidationError>> errors) {this.errors = errors;}
 
-
 }
 
