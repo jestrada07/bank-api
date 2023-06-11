@@ -1,26 +1,28 @@
 package com.gradientbankapi.bankapi.models;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
-//POJO - plain old java object
 @Entity
-public class Customer {
-
-
+public class Customer{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotEmpty
     private String first_name;
+
     @NotEmpty
     private String last_name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private Set<Address> address;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Set<Account> accounts;
+
+    // Constructors, getters, and setters
 
     public Long getId() {
         return id;
@@ -53,4 +55,15 @@ public class Customer {
     public void setAddress(Set<Address> address) {
         this.address = address;
     }
+
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
+    }
+
 }
+

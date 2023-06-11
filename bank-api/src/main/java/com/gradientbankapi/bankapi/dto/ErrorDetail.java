@@ -12,7 +12,7 @@ public class ErrorDetail {
         private String developerMessage;
         private Map<String, List<ValidationError>> errors = new HashMap<>();
 
-
+        
         public String getTitle() {
                 return title;
         }

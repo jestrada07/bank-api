@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class CustomerController {
 
@@ -23,7 +25,7 @@ public class CustomerController {
     //HTTP method to retrieve a customer by their specified account
     @GetMapping("/accounts/{accountId}/customer")
     public ResponseEntity<?> getCustomerByAccountId(@PathVariable Long accountId) {
-        Customer customer = customerService.getCustomerByAccountId(accountId).orElse(null);
+        Customer customer = customerService.getCustomerByAccountId(accountId);
         if (customer == null) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
                     "Error! Couldn't find customer with an account ID of #" + accountId);
@@ -32,6 +34,7 @@ public class CustomerController {
         CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer", customer);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
+
     //This method above is giving me some problems. Everytime I tried to get the account ID for the customer,
     //it's still giving me the error response. Most other methods in this class work well.
 
@@ -106,10 +109,10 @@ public class CustomerController {
     @DeleteMapping("/customers/{customerId}")
     public ResponseEntity<Object> deleteExistingCustomer(@PathVariable Long customerId) {
         try {
-            CodeFactorWithoutData success = new CodeFactorWithoutData(204, "Customer #" + customerId + " successfully deleted!");
+            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Customer #" + customerId + " successfully deleted!");
             customerService.deleteExistingCustomer(customerId);
             logger.info("Successfully deleted customer #" + customerId + "!");
-            return new ResponseEntity<>(success, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(success, HttpStatus.OK);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer #" + customerId + " does not exist!");
             logger.info("Error! Cannot delete customer #" + customerId);

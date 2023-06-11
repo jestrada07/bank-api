@@ -108,6 +108,10 @@ public class Bill {
         return payment_amount;
     }
 
+    public String getRecurring_date() {
+        return recurring_date;
+    }
+
     public void setPayment_amount(Double payment_amount) {
         this.payment_amount = payment_amount;
     }
@@ -138,4 +142,5 @@ public class Bill {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
 }

@@ -4,6 +4,7 @@ import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Bill;
 import com.gradientbankapi.bankapi.models.Customer;
+import com.gradientbankapi.bankapi.models.Withdrawal;
 import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.BillRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,26 +64,72 @@ public class BillService {
 
     //get all bills by customer id
     public List<Bill> showAllBillsForCustomer(Long customerId) {
-        return billRepo.findAllByCustomer(customerId);
+        return billRepo.findByAccount_CustomerId(customerId);
     }
 
-    //get all bills by account id
+    // get all bills by account id
     public List<Bill> showAllBillsForAccount(Long accountId) {
-        return billRepo.findByAccount(accountId);
+        return billRepo.findByAccount_Id(accountId);
     }
 
     //Good
     //Updates bill
-    public void updateBill(Long BillId, Bill bill){
-        verifyBill(BillId);
-        bill.setId(BillId);
-        billRepo.save(bill);
+    public void updateBill(Long billId, Bill updatedBill) {
+        Bill originalBill = billRepo.findById(billId)
+                .orElseThrow(() -> new ResourceNotFoundException("A bill with ID " + billId + " does not exist"));
+
+        Account account = originalBill.getAccount();
+
+        if (updatedBill.getPayment_amount() != originalBill.getPayment_amount()) {
+            // First, revert the original bill
+            account.setBalance(account.getBalance() + originalBill.getPayment_amount());
+
+            // Then, apply the updated bill
+            if (account.getBalance() < updatedBill.getPayment_amount()) {
+                throw new IllegalStateException("The account with ID " + account.getId() + " has insufficient balance for this bill payment");
+            }
+
+            account.setBalance(account.getBalance() - updatedBill.getPayment_amount());
+            originalBill.setPayment_amount(updatedBill.getPayment_amount());
+            accountRepo.save(account);
+        }
+
+        if (updatedBill.getStatus() != null) {
+            originalBill.setStatus(updatedBill.getStatus());
+        }
+        if (updatedBill.getPayee() != null) {
+            originalBill.setPayee(updatedBill.getPayee());
+        }
+        if (updatedBill.getNickname() != null) {
+            originalBill.setNickname(updatedBill.getNickname());
+        }
+        if (updatedBill.getCreation_date() != null) {
+            originalBill.setCreation_date(updatedBill.getCreation_date());
+        }
+        if (updatedBill.getPayment_date() != null) {
+            originalBill.setPayment_date(updatedBill.getPayment_date());
+        }
+        if (updatedBill.getRecurring_date() != null) {
+            originalBill.setRecurring_date(updatedBill.getRecurring_date());
+        }
+        if (updatedBill.getUpcoming_payment_date() != null) {
+            originalBill.setUpcoming_payment_date(updatedBill.getUpcoming_payment_date());
+        }
+        if (updatedBill.getPayment_amount() != null) {
+            originalBill.setPayment_amount(updatedBill.getPayment_amount());
+        }
+
+        billRepo.save(originalBill);
     }
 
     //Good
     //Deletes bill
     public void deleteBill(Long BillId){
-
+        Bill beforeBillBalance = billRepo.findById(BillId)
+                .orElseThrow(() -> new ResourceNotFoundException("A Bill with an ID of #" + BillId + " does not exist! :)"));
+        Account account = beforeBillBalance.getAccount();
+        //reverts back to its original balance
+        account.setBalance(account.getBalance() + beforeBillBalance.getPayment_amount());
         billRepo.deleteById(BillId);
     }
 

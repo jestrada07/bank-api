@@ -22,18 +22,17 @@ public class DepositService {
     AccountRepo accountRepo;
 
 
-    public void createDeposit(Long accountId, Deposit depositToBeCreated){
+
+    public Deposit createDeposit(Long accountId, Deposit depositToBeCreated){
         Account account = accountRepo.findById(accountId).orElse(null);
 
         if (account == null) {
             throw new ResourceNotFoundException("The account with id " + accountId + " does not exist :(");
         }
-
         account.setBalance(account.getBalance() + depositToBeCreated.getAmount()); // Increase account balance by the deposit amount
         accountRepo.save(account); // Save updated account to the database
-
         depositToBeCreated.setAccount(account); // Link the account with the deposit
-        depositRepo.save(depositToBeCreated);
+        return depositRepo.save(depositToBeCreated);
     }
 
 
@@ -48,7 +47,7 @@ public class DepositService {
     }
 
 
-    public void updateDeposit(Long depositId, Deposit depositUpdate){
+    public Deposit updateDeposit(Long depositId, Deposit depositUpdate){
         Deposit originalDeposit = depositRepo.findById(depositId)
                 .orElseThrow(() -> new ResourceNotFoundException("The originalDeposit with id " + depositId + " does not exist :("));
 
@@ -87,7 +86,7 @@ public class DepositService {
             originalDeposit.setDescription(depositUpdate.getDescription());
         }
 
-        depositRepo.save(originalDeposit);
+        return depositRepo.save(originalDeposit);
     }
 
 
