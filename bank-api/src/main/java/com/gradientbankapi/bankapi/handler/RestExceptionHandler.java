@@ -38,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Autowired
     private MessageSource messageSource;
-  
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseBody
     //The @ResponseBody annotation contains the response content that has been sent from the server

@@ -2,13 +2,13 @@ package com.gradientbankapi.bankapi.services;
 
 import com.gradientbankapi.bankapi.exceptions.NoSuchPropertyException;
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
-import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Customer;
 import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,10 +24,11 @@ public class CustomerService {
     private AccountService accountService;
 
     //get a customer that owns the specified account
-    public Optional<Customer> getCustomerByAccountId(Long accountId) {
-        Long customerId = accountService.getAnAccountById(accountId).get().getId();
-        return customerRepo.findById(customerId);
+    public Customer getCustomerByAccountId(Long accountId) {
+        return customerRepo.findCustomerByAccounts_Id(accountId);
     }
+
+
 
     //get all customers
     public Iterable<Customer> getAllCustomers() {
