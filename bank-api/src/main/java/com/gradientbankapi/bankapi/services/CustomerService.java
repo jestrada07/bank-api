@@ -65,18 +65,18 @@ public class CustomerService {
         }
     }
 
-    public Customer getCustomerByName(String FirstName, String LastName) throws NoSuchPropertyException, ResourceNotFoundException {
-        boolean isEmptyString = FirstName.isEmpty() && LastName.isEmpty();
+    public Customer getCustomerByName(String FirstName) throws NoSuchPropertyException, ResourceNotFoundException {
+        boolean isEmptyString = FirstName.isEmpty();
         if (isEmptyString) {
             throw (new NoSuchPropertyException("No name was provided"));
         } else {
             for (Customer customer : this.customerRepo.findAll()) {
-                if (customer.getFirst_Name().equalsIgnoreCase(FirstName)&& customer.getLast_Name().equalsIgnoreCase(LastName)) {
+                if (customer.getFirst_Name().equalsIgnoreCase(FirstName)) {
                     return customer;
                 }
             }
         }
-        throw (new ResourceNotFoundException("Customer with name " + FirstName + " " +  LastName + " not found"));
+        throw (new ResourceNotFoundException("Customer with name " + FirstName +  " not found"));
     }
 
 }

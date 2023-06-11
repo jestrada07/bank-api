@@ -2,6 +2,7 @@ package com.gradientbankapi.bankapi.controllers;
 
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
+import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Customer;
 import com.gradientbankapi.bankapi.services.CustomerService;
 import org.slf4j.Logger;
@@ -117,5 +118,15 @@ public class CustomerController {
     } //tested and works
     //Couldn't figure out how to get the successful delete message to respond but, I don't think
     //it's necessary since it's not in the book. Everything here works fine except for the top method.
+
+    @GetMapping("/customer")  //search functionality that searches a customer by its name
+    public ResponseEntity<Object> getAllOrGetAccountByNickName(@RequestParam(value = "name")  String FirstName) {
+        return (new ResponseEntity<>(this.customerService.getCustomerByName(FirstName), HttpStatus.OK));
+
+    } // tested and works
+
+
+
+
 
 }
