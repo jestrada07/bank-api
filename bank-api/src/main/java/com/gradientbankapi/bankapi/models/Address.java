@@ -26,7 +26,7 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference //backreference is a bidirectional relationship with managedreference(customerclass) makes sure it is in the output
     private Customer customer;
 
     public Address() {
