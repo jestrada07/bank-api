@@ -2,6 +2,7 @@ package com.gradientbankapi.bankapi.models;
 //POJO - plain old java object
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gradientbankapi.bankapi.enums.AccountType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -71,12 +72,18 @@ public class  Account {
         this.balance = balance;
     }
 
+    @JsonIgnore
     public Customer getCustomer() {
         return customer;
     }
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    @JsonProperty("customer_id")
+    public Long getCustomerId(){
+        return this.customer != null ? this.customer.getId() : null;
     }
 
 }
