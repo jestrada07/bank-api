@@ -2,6 +2,8 @@ package com.gradientbankapi.bankapi.controllers;
 
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
+import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
+import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Bill;
 import com.gradientbankapi.bankapi.services.BillService;
 import org.slf4j.Logger;
@@ -26,101 +28,102 @@ public class BillController {
     //not working
     @GetMapping("/accounts/{accountId}/bills")
     public ResponseEntity<Object> getBillThroughAccount(@PathVariable Long accountId){
-//        BillLogs.info("Existing Bills for Account found");
-        //return new ResponseEntity<>(billService.showAllBillsForAccount(accountId), HttpStatus.OK);
-        List<Bill> bills = billService.showAllBillsForAccount(accountId);
-        try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved all bills for account #" + accountId + "!", bills);
-            BillLogs.info("Existing Bills for Account found");
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch(Exception e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error fetching bills");
-            BillLogs.info("Bills cannot be retrieved");
+        Iterable<Bill> bills = billService.showAllBillsForAccount(accountId);
+        if(!bills.iterator().hasNext()) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Error! Cannot retrieve all bills; Account #" + accountId + " does not exist!");
+            BillLogs.info("Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+        CodeMessageFactor success = new CodeMessageFactor(200,
+                "Successfully retrieved all deposits from account #" + accountId, bills);
+        BillLogs.info("Successfully retrieved all deposits from account #" + accountId);
+        return new ResponseEntity<>(success, HttpStatus.OK);
     } //tested and works
 
 
     @GetMapping("/customers/{customerId}/bills")
     public ResponseEntity<Object> getBillThroughCustomer(@PathVariable Long customerId){
-//        BillLogs.info("Existing Bills for Customer found");
-//        return new ResponseEntity<>(billService.showAllBillsForCustomer(customerId), HttpStatus.OK);
-        List<Bill> bills = billService.showAllBillsForCustomer(customerId);
-        try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved all bills for customer #" + customerId + "!", bills);
-            BillLogs.info("Existing Bills for Customer found");
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch (Exception e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error fetching bills");
-            BillLogs.info("Bills cannot be retrieved");
+        Iterable<Bill> bills = billService.showAllBillsForCustomer(customerId);
+        if(!bills.iterator().hasNext()) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Error! Cannot retrieve all bills; Customer #" + customerId + " does not exist!");
+            BillLogs.info("Error! Cannot retrieve all bills; Customer #" + customerId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+        CodeMessageFactor success = new CodeMessageFactor(200,
+                "Successfully retrieved all bills from customer #" + customerId, bills);
+        BillLogs.info("Successfully retrieved all bills from account #" + customerId);
+        return new ResponseEntity<>(success, HttpStatus.OK);
     } //tested and works
 
     //works
     @GetMapping("/bills/{billId}")
     public ResponseEntity<Object> getBillThroughBillId(@PathVariable Long billId){
-        BillLogs.info("Bill Id found");
         Optional<Bill> bills = billService.showBillById(billId);
-        //return new ResponseEntity<>(billService.showBillById(billId), HttpStatus.OK);
-        try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved bill #" + billId + "!", bills);
-            BillLogs.info("The bill with id #" + billId + "has been retrieved!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch(Exception e){
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error fetching bill with id #" + billId);
-            BillLogs.info("This bill does not exist");
+        if(bills.isEmpty()) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Error! Cannot retrieve a bill; Bill #" + billId + " does not exist!");
+            BillLogs.info("Error! Cannot retrieve a bill; Bill #" + billId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+        CodeMessageFactor success = new CodeMessageFactor(200,
+                "Successfully retrieved bill #" + billId + "!", bills);
+        BillLogs.info("Successfully retrieved bill #" + billId + "!");
+        return new ResponseEntity<>(success, HttpStatus.OK);
     } //tested and works
 
     //works
     @PostMapping("/accounts/{accountId}/bills")
     public ResponseEntity<Object> createBillForAccount(@PathVariable Long accountId, @RequestBody Bill bill){
-        BillLogs.info("Bill successfully constructed for account");
-        billService.createBill(accountId, bill);
-        //return new ResponseEntity<>(HttpStatus.CREATED);
         try {
-            CodeMessageFactor success = new CodeMessageFactor(201, "Successfully created bill for account #" + accountId);
+            CodeMessageFactor success = new CodeMessageFactor(201, "Successfully created bill for account #" + accountId,
+                    billService.createBill(accountId, bill));
             BillLogs.info("The bill has been successfully created for account #" + accountId);
             return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch(Exception e){
+        } catch (ResourceNotFoundException e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error creating bill: Account not found");
             BillLogs.info("Could not create bill");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
+                    "The account with id " + accountId + " has insufficient balance to pay this bill");
+            BillLogs.info("Could not create bill due to insufficient funds");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     } //tested and works
 
     //not working
     @PutMapping("/bills/{billId}")
     public ResponseEntity<Object> updatingBill(@PathVariable Long billId, @RequestBody Bill bill){
-        BillLogs.info("Bill Id found");
-        billService.updateBill(billId, bill);
-        //return new ResponseEntity<>(HttpStatus.OK);
         try {
-            CodeMessageFactor success = new CodeMessageFactor(202, "Accepted bill modification");
+            CodeMessageFactor success = new CodeMessageFactor(202, "Accepted bill modification",
+                    billService.updateBill(billId, bill));
             BillLogs.info("Bill has been successfully modified");
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch (Exception e){
+            return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
+        } catch (ResourceNotFoundException e){
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Bill ID does not exist");
-            BillLogs.info("Could not find bill with the provided id");
+            BillLogs.info("Could not find bill with the provided ID");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        } catch (Exception e){
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
+                    "Bill cannot be updated due to insufficient funds");
+            BillLogs.info("Bill cannot be updated due to insufficient funds");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     } //tested and works
 
     //working
     @DeleteMapping("/bills/{billId}")
     public ResponseEntity<Object> deleteBill(@PathVariable Long billId){
-        billService.deleteBill(billId);
-        BillLogs.info("Bill deleted successfully");
-        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         try {
-            CodeMessageFactor success = new CodeMessageFactor(204, "Content successfully deleted");
-            BillLogs.info("Bill has been successfully deleted");
-            return new ResponseEntity<>(success, HttpStatus.NO_CONTENT);
-        } catch (Exception e){
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "This id does not exist in bills");
-            BillLogs.info("The bill with the provided id does not exist");
+            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Bill #" + billId + " successfully deleted!");
+            billService.deleteBill(billId);
+            BillLogs.info("Successfully deleted bill #" + billId + "!");
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Bill #" + billId + " does not exist!");
+            BillLogs.info("Error! Cannot delete bill #" + billId);
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
     } //tested and works

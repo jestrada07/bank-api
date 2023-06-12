@@ -1,6 +1,7 @@
 package com.gradientbankapi.bankapi.repos;
 
 import com.gradientbankapi.bankapi.models.Account;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.List;
 public interface AccountRepo extends CrudRepository<Account, Long> {
 
     //find all accounts by the customer's ID
-    List<Account> findAllAccountsByCustomerId(Long customerId);
+    @Query("SELECT a FROM Account a WHERE a.customer.id = :customerId")
+    Iterable<Account> findAllAccountsByCustomerId(Long customerId);
 
 }
