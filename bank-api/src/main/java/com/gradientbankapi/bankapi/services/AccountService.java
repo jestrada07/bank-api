@@ -29,7 +29,7 @@ public class AccountService {
     }
 
     //get all accounts from a specific customer
-    public List<Account> getAllAccountsByCustomerId(Long customerId) {
+    public Iterable<Account> getAllAccountsByCustomerId(Long customerId) {
         return accountRepo.findAllAccountsByCustomerId(customerId);
     }
 
