@@ -61,8 +61,8 @@ public class DepositController {
         List<Deposit> deposits = depositService.getDepositsForAccount(accountId);
         if(deposits.isEmpty()) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
-                    "Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
-            logger.info("Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
+                    "Error! Cannot retrieve all deposits! Account #" + accountId + " does not exist!");
+            logger.info("Error! Cannot retrieve all deposits! Account #" + accountId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
         CodeMessageFactor success = new CodeMessageFactor(200,

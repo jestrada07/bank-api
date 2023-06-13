@@ -67,6 +67,11 @@ public class WithdrawalController {
                     "Cannot create a withdrawal! Account #" + accountId + " does not exist!");
             logger.info("Cannot create a withdrawal! Account #" + accountId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        } catch (IllegalStateException e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
+                    "Error! Withdrawal cannot be created due to insufficient funds!");
+            logger.info("Error! Withdrawal cannot be created due to insufficient funds!");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error! Cannot create a withdrawal!");
             logger.info("Error! Cannot create a withdrawal!");
