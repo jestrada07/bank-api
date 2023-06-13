@@ -109,7 +109,6 @@ public class CustomerController {
     @DeleteMapping("/customers/{customerId}")
     public ResponseEntity<Object> deleteExistingCustomer(@PathVariable Long customerId) {
         try {
-            //CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Customer #" + customerId + " successfully deleted!");
             customerService.deleteExistingCustomer(customerId);
             logger.info("Successfully deleted customer #" + customerId + "!");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
