@@ -26,9 +26,12 @@ public class AccountController {
         if (accounts.iterator().hasNext()) {
             CodeMessageFactor successfullResponse = new CodeMessageFactor(200,
                     "Successfully retrieved all accounts!", accounts);
+            logger.info("Successfully retrieved all accounts!");
             return new ResponseEntity<>(successfullResponse, HttpStatus.OK);
         }
-        CodeFactorWithoutData failedResponse = new CodeFactorWithoutData(404, "Error fetching all accounts");
+        CodeFactorWithoutData failedResponse = new CodeFactorWithoutData(404,
+                "Error fetching accounts! Accounts were not created!");
+        logger.info("Error fetching accounts! Accounts were not created!");
         return new ResponseEntity<>(failedResponse, HttpStatus.NOT_FOUND);
     } //tested and works
 
@@ -66,12 +69,13 @@ public class AccountController {
     @PostMapping("/customers/{customerId}/accounts")
     public ResponseEntity<Object> createAnAccount(@PathVariable Long customerId, @RequestBody Account accountToBeCreated) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(201, "Customer account created", accountService.createAnAccount(customerId, accountToBeCreated));
-            logger.info("Successfully created a customer!");
+            CodeMessageFactor success = new CodeMessageFactor(201, "Account created for customer #" + customerId + "!",
+                    accountService.createAnAccount(customerId, accountToBeCreated));
+            logger.info("Successfully created an account for customer #" + customerId + "!");
             return new ResponseEntity<>(success, HttpStatus.CREATED);
         } catch (Exception e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error creating customer");
-            logger.info("Error! Cannot create customer!");
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error creating account! Customer #" + customerId + " does not exist!");
+            logger.info("Error creating account! Customer #" + customerId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     } //tested and works
@@ -94,7 +98,6 @@ public class AccountController {
     @DeleteMapping("/accounts/{accountId}")
     public ResponseEntity<?> deleteExistingAccount(@PathVariable Long accountId) {
         try {
-            //CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Account #" + accountId + " successfully deleted!");
             accountService.deleteExistingAccount(accountId);
             logger.info("Successfully deleted Account #" + accountId + "!");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
