@@ -42,7 +42,6 @@ public class DepositService {
     }
 
     public List<Deposit> getDepositsForAccount(Long accountId){
-        verifyDeposit(accountId);
         return depositRepo.findAllDepositsByAccountId(accountId);
     }
 

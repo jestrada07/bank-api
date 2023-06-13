@@ -22,7 +22,7 @@ public class WithdrawalService {
     private AccountRepo accountRepo;
 
     @Transactional
-    public void createAWithdrawal(Long accountId, Withdrawal withdrawalToBeCreated) {
+    public Withdrawal createAWithdrawal(Long accountId, Withdrawal withdrawalToBeCreated) {
         Account account = accountRepo.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("The account with id " + accountId + " does not exist :("));
 
@@ -35,7 +35,7 @@ public class WithdrawalService {
         accountRepo.save(account); // Save updated account to the database
 
         withdrawalToBeCreated.setAccount(account);
-        withdrawalRepo.save(withdrawalToBeCreated);
+        return withdrawalRepo.save(withdrawalToBeCreated);
     }
 
     //get all withdrawals for a specific account
@@ -50,7 +50,7 @@ public class WithdrawalService {
     }
 
     //update an existing withdrawal
-    public void updateExistingWithdrawal(Long withdrawalId, Withdrawal withdrawalUpdate) {
+    public Withdrawal updateExistingWithdrawal(Long withdrawalId, Withdrawal withdrawalUpdate) {
         Withdrawal originalWithdrawal = withdrawalRepo.findById(withdrawalId)
                 .orElseThrow(() -> new ResourceNotFoundException("A withdrawal with an ID of #" + withdrawalId + " does not exist! :)"));
 
@@ -89,7 +89,7 @@ public class WithdrawalService {
             originalWithdrawal.setDescription(withdrawalUpdate.getDescription());
         }
 
-        withdrawalRepo.save(originalWithdrawal);
+        return withdrawalRepo.save(originalWithdrawal);
     }
 
     //delete an existing withdrawal

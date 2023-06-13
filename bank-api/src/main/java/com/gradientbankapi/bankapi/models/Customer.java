@@ -20,14 +20,14 @@ public class Customer{
     private String first_name;
 
     @NotEmpty
-    @Column(name = "last_Name")
+    @Column(name = "last_Name") //creates a column named last_name
     private String last_name;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true) //deletes when not associated with a parent, prevents from infinite loop
     @JsonManagedReference
-    private Set<Address> address = new HashSet<>();
+    private Set<Address> address = new HashSet<>(); //initialize the hashset - does not allow duplicates - allows fast lookups - does not maintain insertion order
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true) //deletes when not associated with a parent, prevents from infinite loop
     private Set<Account> accounts = new HashSet<>();
 
     // Constructors, getters, and setters

@@ -27,10 +27,13 @@ public class BillService {
     //Good
     //post
     @Transactional
-    public void createBill(Long accountId, Bill bill) {
+    public Bill createBill(Long accountId, Bill bill) {
         // Find account or throw error if not found
-        Account account = accountRepo.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("The account with id " + accountId + " does not exist"));
+
+        Account account = accountRepo.findById(accountId).orElse(null);
+        if(account == null) {
+            throw new ResourceNotFoundException();
+        }
 
         // Check if account has enough balance to pay the bill
         if (account.getBalance() < bill.getPayment_amount()) {
@@ -50,7 +53,7 @@ public class BillService {
 
         bill.setAccount(account);
         bill.setCustomer(customer);
-        billRepo.save(bill);
+        return billRepo.save(bill);
     }
 
 
@@ -58,25 +61,27 @@ public class BillService {
     //Good
     //get bill by the bill id
     public Optional<Bill> showBillById(Long BillId) {
-        verifyBill(BillId);
         return billRepo.findById(BillId);
     }
 
     //get all bills by customer id
-    public List<Bill> showAllBillsForCustomer(Long customerId) {
+    public Iterable<Bill> showAllBillsForCustomer(Long customerId) {
         return billRepo.findByAccount_CustomerId(customerId);
     }
 
     // get all bills by account id
-    public List<Bill> showAllBillsForAccount(Long accountId) {
+    public Iterable<Bill> showAllBillsForAccount(Long accountId) {
         return billRepo.findByAccount_Id(accountId);
     }
 
     //Good
     //Updates bill
-    public void updateBill(Long billId, Bill updatedBill) {
-        Bill originalBill = billRepo.findById(billId)
-                .orElseThrow(() -> new ResourceNotFoundException("A bill with ID " + billId + " does not exist"));
+    public Bill updateBill(Long billId, Bill updatedBill) {
+        Bill originalBill = billRepo.findById(billId).orElse(null);
+        if(originalBill == null) {
+            throw new ResourceNotFoundException();
+        }
+                //.orElseThrow(() -> new ResourceNotFoundException("A bill with ID " + billId + " does not exist"));
 
         Account account = originalBill.getAccount();
 
@@ -119,7 +124,7 @@ public class BillService {
             originalBill.setPayment_amount(updatedBill.getPayment_amount());
         }
 
-        billRepo.save(originalBill);
+        return billRepo.save(originalBill);
     }
 
     //Good
