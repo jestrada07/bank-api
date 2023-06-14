@@ -16,9 +16,9 @@ public class TransferService {
     @Autowired
     AccountRepo accountRepo;
 
-    public Transfer transferingAmount(Long sendCustAccount, Long receiveCustAccount, Transfer transfer){
+    public Transfer transferringAmount(Long sendCustAccount, Long receiveCustAccount, Transfer transfer){
         Account sender = accountRepo.findById(sendCustAccount).orElse(null);
-        Account reciever = accountRepo.findById(receiveCustAccount).orElse(null);
+        Account receiver = accountRepo.findById(receiveCustAccount).orElse(null);
 
         sender.setBalance(sender.getBalance() - transfer.getAmount());
         if (sender.getBalance() < transfer.getAmount()) {
@@ -26,8 +26,8 @@ public class TransferService {
         }
         accountRepo.save(sender);
 
-        reciever.setBalance(reciever.getBalance() + transfer.getAmount());
-        accountRepo.save(reciever);
+        receiver.setBalance(receiver.getBalance() + transfer.getAmount());
+        accountRepo.save(receiver);
 
         return transferRepo.save(transfer);
     }
