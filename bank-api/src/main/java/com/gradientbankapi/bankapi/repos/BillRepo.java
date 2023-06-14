@@ -20,6 +20,5 @@ public interface BillRepo extends CrudRepository<Bill, Long> {
     @Query("SELECT b FROM Bill b WHERE b.account.id = :accountId")
     Iterable<Bill> findByAccount_Id(Long accountId);
 
-
 }
 

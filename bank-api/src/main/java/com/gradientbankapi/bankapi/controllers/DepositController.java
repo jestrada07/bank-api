@@ -2,6 +2,7 @@ package com.gradientbankapi.bankapi.controllers;
 
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
+import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Deposit;
 import com.gradientbankapi.bankapi.services.DepositService;
 import org.slf4j.Logger;
@@ -28,6 +29,11 @@ public class DepositController {
                     depositService.createDeposit(accountId, depositToBeCreated));
             logger.info("Deposit created successfully!");
             return new ResponseEntity<>(success, HttpStatus.CREATED);
+        } catch (ResourceNotFoundException e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Deposit couldn't be created! Account #" + accountId + " does not exist!");
+            logger.info("Deposit couldn't be created! Account #" + accountId + " does not exist!");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error creating deposit!");
             logger.info("Error! Cannot create a deposit!");
@@ -55,8 +61,8 @@ public class DepositController {
         List<Deposit> deposits = depositService.getDepositsForAccount(accountId);
         if(deposits.isEmpty()) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
-                    "Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
-            logger.info("Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
+                    "Error! Cannot retrieve all deposits! Account #" + accountId + " does not exist!");
+            logger.info("Error! Cannot retrieve all deposits! Account #" + accountId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
         CodeMessageFactor success = new CodeMessageFactor(200,
@@ -68,24 +74,28 @@ public class DepositController {
     @PutMapping("/deposits/{depositId}")
     public ResponseEntity<Object> updateDeposit (@PathVariable Long depositId, @RequestBody Deposit deposit) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(202, "Deposit type #" + depositId + " updated successfully!",
-                    depositService.updateDeposit(depositId, deposit));
+            depositService.updateDeposit(depositId, deposit);
+            CodeFactorWithoutData success = new CodeFactorWithoutData(202, "Deposit type #" + depositId + " updated successfully!");
             logger.info("Deposit type #" + depositId + " updated successfully!");
             return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
-        } catch (Exception e) {
+        } catch (ResourceNotFoundException e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Deposit type #" + depositId + " does not exist!");
-            logger.info("Error! Cannot update deposit type #" + depositId);
+            logger.info("Error! Deposit type #" + depositId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
+                    "Error! Deposit type #" + depositId + " couldn't be updated!");
+            logger.info("Error! Cannot update deposit type #" + depositId + "!");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     } //This is good
 
     @DeleteMapping("/deposits/{depositId}")
     public ResponseEntity<Object> deleteDeposit (@PathVariable Long depositId){
         try {
-            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Deposit type #" + depositId + " successfully deleted!");
             depositService.deleteDeposit(depositId);
             logger.info("Successfully deleted deposit type #" + depositId + "!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Deposit type #" + depositId + " does not exist!");
             logger.info("Error! Cannot delete deposit type #" + depositId);
