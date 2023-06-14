@@ -21,6 +21,7 @@ public class Deposit {
     @NotNull
     private TransactionType type;
     private String transaction_date;
+
     private StatusType status;
     @NotNull
     private Long payee_id;
