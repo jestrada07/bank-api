@@ -1,11 +1,8 @@
 package com.gradientbankapi.bankapi.services;
 
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
-import com.gradientbankapi.bankapi.models.Account;
-import com.gradientbankapi.bankapi.models.Customer;
-import com.gradientbankapi.bankapi.models.Deposit;
-import com.gradientbankapi.bankapi.repos.AccountRepo;
-import com.gradientbankapi.bankapi.repos.CustomerRepo;
+import com.gradientbankapi.bankapi.models.*;
+import com.gradientbankapi.bankapi.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +26,7 @@ public class AccountService {
     }
 
     //get all accounts from a specific customer
-    public List<Account> getAllAccountsByCustomerId(Long customerId) {
+    public Iterable<Account> getAllAccountsByCustomerId(Long customerId) {
         return accountRepo.findAllAccountsByCustomerId(customerId);
     }
 
@@ -73,7 +70,6 @@ public class AccountService {
             throw new ResourceNotFoundException("An account with an ID of #" + accountId + " does not exist! :/");
         }
     }
-
 
 
 }

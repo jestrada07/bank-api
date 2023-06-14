@@ -28,8 +28,8 @@ public class BillController {
     //not working
     @GetMapping("/accounts/{accountId}/bills")
     public ResponseEntity<Object> getBillThroughAccount(@PathVariable Long accountId){
-        List<Bill> bills = billService.showAllBillsForAccount(accountId);
-        if(bills.isEmpty()) {
+        Iterable<Bill> bills = billService.showAllBillsForAccount(accountId);
+        if(!bills.iterator().hasNext()) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
                     "Error! Cannot retrieve all bills; Account #" + accountId + " does not exist!");
             BillLogs.info("Error! Cannot retrieve all deposits; Account #" + accountId + " does not exist!");
@@ -44,8 +44,8 @@ public class BillController {
 
     @GetMapping("/customers/{customerId}/bills")
     public ResponseEntity<Object> getBillThroughCustomer(@PathVariable Long customerId){
-        List<Bill> bills = billService.showAllBillsForCustomer(customerId);
-        if(bills.isEmpty()) {
+        Iterable<Bill> bills = billService.showAllBillsForCustomer(customerId);
+        if(!bills.iterator().hasNext()) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
                     "Error! Cannot retrieve all bills; Customer #" + customerId + " does not exist!");
             BillLogs.info("Error! Cannot retrieve all bills; Customer #" + customerId + " does not exist!");
