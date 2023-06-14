@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,18 +33,36 @@ public class AccountTransactionsController {
 
     @GetMapping("/account-transactions/{accountId}")
     public ResponseEntity<Object> getAccountTransactions(@PathVariable Long accountId) {
-        AccountTransactions accountTransactions = accountTransactionsService.getAccountTransactions(accountId);
-        Optional<Account> accounts = accountService.getAnAccountById(accountId);
+        try {
+            AccountTransactions accountTransactions = accountTransactionsService.getAccountTransactions(accountId);
+            Optional<Account> accounts = accountService.getAnAccountById(accountId);
 
-        if (accounts.isEmpty()){
-            CodeFactorWithoutData codeFactorWithoutData = new CodeFactorWithoutData(404, "This account with id #" + accountId + " does not exist!");
+            if (accounts.isEmpty()) {
+                CodeFactorWithoutData codeFactorWithoutData = new CodeFactorWithoutData(404, "This account with id #" + accountId + " does not exist!");
+                logger.info("Error retrieving transactions for account #" + accountId);
+                return new ResponseEntity<>(codeFactorWithoutData, HttpStatus.NOT_FOUND);
+            }
+            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved transactions for account #" + accountId, accountTransactions);
+            accountTransactionsService.getAccountTransactions(accountId);
+            logger.info("Successfully retrieved transactions for account #" + accountId);
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        } catch (ResourceNotFoundException e){
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "This account with id #" + accountId + " does not exist!");
             logger.info("Error retrieving transactions for account #" + accountId);
-            return new ResponseEntity<>(codeFactorWithoutData, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-        CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved transactions for account #" + accountId, accountTransactions);
-        accountTransactionsService.getAccountTransactions(accountId);
-        logger.info("Successfully retrieved transactions for account #" + accountId);
-        return new ResponseEntity<>(success, HttpStatus.OK);
+
+//        try{
+//            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved transactions for account #" + accountId, accountTransactions);
+//            //accountTransactionsService.getAccountTransactions(accountId);
+//            logger.info("Successfully retrieved transactions for account #" + accountId);
+//            return new ResponseEntity<>(success, HttpStatus.OK);
+//        } catch (Exception e){
+//            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "This account with id #" + accountId + " does not exist!");
+//            logger.info("Error retrieving transactions for account #" + accountId);
+//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+//        }
+        //return ResponseEntity.ok(accountTransactions);
 
     }
 }
