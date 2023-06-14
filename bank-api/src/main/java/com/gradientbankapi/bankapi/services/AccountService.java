@@ -32,7 +32,7 @@ public class AccountService {
 
     //get an account by id
     public Optional<Account> getAnAccountById(Long accountId) {
-        verifyAccount(accountId);
+        //verifyAccount(accountId);
         return accountRepo.findById(accountId);
     }
 

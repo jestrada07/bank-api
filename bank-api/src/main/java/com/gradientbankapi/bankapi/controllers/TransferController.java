@@ -23,11 +23,11 @@ public class TransferController {
     private TransferService transferService;
 
 
-    @PostMapping("/accounts/{accountIdone}/accounts/{accountIdtwo}")
-    public ResponseEntity<Object> createATransfer(@PathVariable Long accountIdone,@PathVariable Long accountIdtwo, @RequestBody Transfer transfer) {
+    @PostMapping("/accounts/{accountIdOne}/accounts/{accountIdTwo}")
+    public ResponseEntity<Object> createATransfer(@PathVariable Long accountIdOne,@PathVariable Long accountIdTwo, @RequestBody Transfer transfer) {
         try {
             CodeMessageFactor success = new CodeMessageFactor(201, "Transfer successfully completed!",
-                    transferService.transferringAmount(accountIdone,accountIdtwo, transfer));
+                    transferService.transferringAmount(accountIdOne,accountIdTwo, transfer));
             logger.info("Transfer successfully completed!");
             return new ResponseEntity<>(success, HttpStatus.CREATED);
         } catch (Exception e) {
