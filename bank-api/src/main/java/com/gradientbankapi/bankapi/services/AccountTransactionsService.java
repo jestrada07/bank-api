@@ -28,7 +28,7 @@ public class AccountTransactionsService {
     public AccountTransactions getAccountTransactions(Long accountId) {
         List<Deposit> deposits = depositRepo.findAllDepositsByAccountId(accountId);
         List<Withdrawal> withdrawals = withdrawalRepo.findAllWithdrawalsByAccountId(accountId);
-        List<Transfer> transfers = transferRepo.findAllBySendingCustomerOrRecievingCustomer(accountId,accountId);
+        List<Transfer> transfers = transferRepo.findAllBySendingCustomerOrReceivingCustomer(accountId,accountId);
 
         return new AccountTransactions(deposits, withdrawals, transfers);
 

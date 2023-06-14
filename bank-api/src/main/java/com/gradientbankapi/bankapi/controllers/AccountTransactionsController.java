@@ -17,7 +17,7 @@ public class AccountTransactionsController {
     @Autowired
     private AccountTransactionsService accountTransactionsService;
 
-    @GetMapping("/api/account-transactions/{accountId}")
+    @GetMapping("/account-transactions/{accountId}")
     public ResponseEntity<AccountTransactions> getAccountTransactions(@PathVariable Long accountId) {
         AccountTransactions accountTransactions = accountTransactionsService.getAccountTransactions(accountId);
         return ResponseEntity.ok(accountTransactions);
