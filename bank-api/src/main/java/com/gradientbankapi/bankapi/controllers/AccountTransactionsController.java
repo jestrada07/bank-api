@@ -3,8 +3,10 @@ package com.gradientbankapi.bankapi.controllers;
 
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
+
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
+
 import com.gradientbankapi.bankapi.models.AccountTransactions;
 import com.gradientbankapi.bankapi.services.AccountService;
 import com.gradientbankapi.bankapi.services.AccountTransactionsService;
@@ -51,17 +53,5 @@ public class AccountTransactionsController {
             logger.info("Error retrieving transactions for account #" + accountId);
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-
-//        try{
-//            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved transactions for account #" + accountId, accountTransactions);
-//            //accountTransactionsService.getAccountTransactions(accountId);
-//            logger.info("Successfully retrieved transactions for account #" + accountId);
-//            return new ResponseEntity<>(success, HttpStatus.OK);
-//        } catch (Exception e){
-//            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "This account with id #" + accountId + " does not exist!");
-//            logger.info("Error retrieving transactions for account #" + accountId);
-//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-//        }
-        //return ResponseEntity.ok(accountTransactions);
     }
 }
