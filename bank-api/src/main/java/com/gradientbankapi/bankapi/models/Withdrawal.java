@@ -19,6 +19,7 @@ import javax.validation.constraints.Min;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
 public class Withdrawal {
@@ -29,7 +30,11 @@ public class Withdrawal {
     @NotNull
     private TransactionType type;
     private String transaction_date;
-    private StatusType status;
+    @PrePersist
+    protected void onCreate() {
+        transaction_date = LocalDate.now().toString(); // or any other logic to set the date
+    }
+    private StatusType status = StatusType.getDefault();
     @NotNull
     private Long payer_id;
     @NotNull

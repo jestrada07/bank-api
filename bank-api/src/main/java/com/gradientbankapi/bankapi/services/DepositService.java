@@ -7,11 +7,15 @@ import com.gradientbankapi.bankapi.models.Deposit;
 import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.DepositRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+
+import static com.gradientbankapi.bankapi.enums.StatusType.COMPLETED;
+import static com.gradientbankapi.bankapi.enums.StatusType.PENDING;
 
 @Service
 public class DepositService {
@@ -32,6 +36,7 @@ public class DepositService {
         account.setBalance(account.getBalance() + depositToBeCreated.getAmount()); // Increase account balance by the deposit amount
         accountRepo.save(account); // Save updated account to the database
         depositToBeCreated.setAccount(account); // Link the account with the deposit
+        changeDefault();
         return depositRepo.save(depositToBeCreated);
     }
 
@@ -105,5 +110,14 @@ public class DepositService {
         }
     }
 
-
+    @Scheduled(fixedRate = 9000)
+    protected void changeDefault() {
+        Iterable<Deposit> d = depositRepo.findAll();
+        for (Deposit check : d) {
+            if (check.getStatus() == PENDING) {
+                check.setStatus(COMPLETED);
+                depositRepo.save(check);
+            }
+        }
+    }
 }

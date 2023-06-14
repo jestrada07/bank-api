@@ -106,7 +106,6 @@ public class AccountController {
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
     } //tested and works
-
 }
 
 
