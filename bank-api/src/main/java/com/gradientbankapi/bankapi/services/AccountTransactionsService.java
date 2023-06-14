@@ -1,9 +1,8 @@
 package com.gradientbankapi.bankapi.services;
 
-import com.gradientbankapi.bankapi.models.AccountTransactions;
-import com.gradientbankapi.bankapi.models.Deposit;
-import com.gradientbankapi.bankapi.models.Transfer;
-import com.gradientbankapi.bankapi.models.Withdrawal;
+import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
+import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
+import com.gradientbankapi.bankapi.models.*;
 import com.gradientbankapi.bankapi.repos.DepositRepo;
 import com.gradientbankapi.bankapi.repos.TransferRepo;
 import com.gradientbankapi.bankapi.repos.WithdrawalRepo;
@@ -24,6 +23,9 @@ public class AccountTransactionsService {
 
     @Autowired
     private TransferRepo transferRepo;
+
+    @Autowired
+    private AccountService accountService;
 
     public AccountTransactions getAccountTransactions(Long accountId) {
         List<Deposit> deposits = depositRepo.findAllDepositsByAccountId(accountId);

@@ -1,5 +1,6 @@
 package com.gradientbankapi.bankapi.services;
 
+import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Customer;
@@ -35,7 +36,7 @@ public class AccountService {
 
     //get an account by id
     public Optional<Account> getAnAccountById(Long accountId) {
-        verifyAccount(accountId);
+        //verifyAccount(accountId);
         return accountRepo.findById(accountId);
     }
 
@@ -70,7 +71,8 @@ public class AccountService {
     protected void verifyAccount(Long accountId) throws ResourceNotFoundException {
         Optional<Account> account = accountRepo.findById(accountId);
         if(account.isEmpty()) {
-            throw new ResourceNotFoundException("An account with an ID of #" + accountId + " does not exist! :/");
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error!");
+            throw new ResourceNotFoundException(error.getMessage());
         }
     }
 

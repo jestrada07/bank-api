@@ -55,15 +55,23 @@ public class AccountController {
     //HTTP method to get an account by id
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Object> getAnAccountById(@PathVariable Long accountId) {
-        try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer account #" + accountId, accountService.getAnAccountById(accountId));
-            logger.info("Successfully retrieved customer account #" + accountId);
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch (Exception e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer account #" + accountId + " does not exist!");
-            logger.info("Error! Customer account #" + accountId + " does not exist");
+        if(accountService.getAnAccountById(accountId).isEmpty()) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Account #" + accountId + " does not exist!");
+            logger.info("Error! Account #" + accountId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+        CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer account #" + accountId, accountService.getAnAccountById(accountId));
+        logger.info("Successfully retrieved customer account #" + accountId);
+        return new ResponseEntity<>(success, HttpStatus.OK);
+//        try {
+//            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer account #" + accountId, accountService.getAnAccountById(accountId));
+//            logger.info("Successfully retrieved customer account #" + accountId);
+//            return new ResponseEntity<>(success, HttpStatus.OK);
+//        } catch (Exception e) {
+//            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer account #" + accountId + " does not exist!");
+//            logger.info("Error! Customer account #" + accountId + " does not exist");
+//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+//        }
     } //tested and works
 
     //HTTP method to create an account
