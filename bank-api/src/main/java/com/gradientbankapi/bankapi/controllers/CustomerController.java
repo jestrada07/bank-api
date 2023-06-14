@@ -41,16 +41,17 @@ public class CustomerController {
     //HTTP method to retrieve all customers
     @GetMapping("/customers")
     public ResponseEntity<Object> getAllCustomers() {
-        try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved all customers",
-                    customerService.getAllCustomers());
+        Iterable<Customer> customers = customerService.getAllCustomers();
+        if (customers.iterator().hasNext()) {
+            CodeMessageFactor success = new CodeMessageFactor(200,
+                    "Successfully retrieved all customers!", customers);
             logger.info("Successfully retrieved all customers!");
             return new ResponseEntity<>(success, HttpStatus.OK);
-        } catch (Exception e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error fetching customers!");
-            logger.info("Error! Cannot fetch customers!");
-            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+        CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                "Error fetching customers! Customers were not created!");
+        logger.info("Error fetching customers! Customers were not created!");
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     } //tested and works
 
     //HTTP method to get a customer by their ID
@@ -94,13 +95,12 @@ public class CustomerController {
     @PutMapping("/customers/{customerId}")
     public ResponseEntity<Object> updateExistingCustomer(@PathVariable Long customerId, @RequestBody Customer customerToBeUpdated) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(202, "Customer #" + customerId + " updated successfully!",
-                    customerService.updateExistingCustomer(customerId, customerToBeUpdated));
+            CodeFactorWithoutData success = new CodeFactorWithoutData(202, "Customer #" + customerId + " updated successfully!");
             logger.info("Customer #" + customerId + " updated successfully!");
             return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer #" + customerId + " does not exist!");
-            logger.info("Error! Cannot update customer #" + customerId);
+            logger.info("Error! Customer #" + customerId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
     } //tested and works
@@ -109,10 +109,9 @@ public class CustomerController {
     @DeleteMapping("/customers/{customerId}")
     public ResponseEntity<Object> deleteExistingCustomer(@PathVariable Long customerId) {
         try {
-            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Customer #" + customerId + " successfully deleted!");
             customerService.deleteExistingCustomer(customerId);
             logger.info("Successfully deleted customer #" + customerId + "!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer #" + customerId + " does not exist!");
             logger.info("Error! Cannot delete customer #" + customerId);

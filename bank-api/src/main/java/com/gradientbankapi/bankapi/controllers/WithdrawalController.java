@@ -32,7 +32,7 @@ public class WithdrawalController {
             logger.info("Error! Cannot retrieve all withdrawals; Account #" + accountId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-        CodeMessageFactor success = new CodeMessageFactor(200,
+        CodeMessageFactor success = new CodeMessageFactor(HttpStatus.OK.value(),
                 "Successfully retrieved all withdrawals from account #" + accountId, withdrawals);
         logger.info("Successfully retrieved all withdrawals from account #" + accountId);
         return new ResponseEntity<>(success, HttpStatus.OK);
@@ -42,14 +42,14 @@ public class WithdrawalController {
     @GetMapping("/withdrawals/{withdrawalId}")
     public ResponseEntity<Object> getAWithdrawalById(@PathVariable Long withdrawalId) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved withdrawal type #" + withdrawalId,
+            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved withdrawal #" + withdrawalId,
                     withdrawalService.getAWithdrawalById(withdrawalId));
-            logger.info("Successfully retrieved withdrawal type #" + withdrawalId);
+            logger.info("Successfully retrieved withdrawal #" + withdrawalId);
             return new ResponseEntity<>(success, HttpStatus.OK);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(404,
-                    "Error! Withdrawal type #" + withdrawalId + " does not exist!");
-            logger.info("Error! Withdrawal type #" + withdrawalId + " does not exist!");
+                    "Error! Withdrawal #" + withdrawalId + " does not exist!");
+            logger.info("Error! Withdrawal #" + withdrawalId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
     } //tested and works
@@ -62,6 +62,16 @@ public class WithdrawalController {
                     withdrawalService.createAWithdrawal(accountId, withdrawalToBeCreated));
             logger.info("Withdrawal created successfully!");
             return new ResponseEntity<>(success, HttpStatus.CREATED);
+        } catch (ResourceNotFoundException e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404,
+                    "Cannot create a withdrawal! Account #" + accountId + " does not exist!");
+            logger.info("Cannot create a withdrawal! Account #" + accountId + " does not exist!");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        } catch (IllegalStateException e) {
+            CodeFactorWithoutData error = new CodeFactorWithoutData(400,
+                    "Error! Withdrawal cannot be created due to insufficient funds!");
+            logger.info("Error! Withdrawal cannot be created due to insufficient funds!");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(400, "Error! Cannot create a withdrawal!");
             logger.info("Error! Cannot create a withdrawal!");
@@ -73,18 +83,18 @@ public class WithdrawalController {
     @PutMapping("/withdrawals/{withdrawalId}")
     public ResponseEntity<Object> updateExistingWithdrawal(@PathVariable Long withdrawalId, @RequestBody Withdrawal withdrawalToBeUpdated) {
         try {
-            CodeMessageFactor success = new CodeMessageFactor(202, "Withdrawal type #" + withdrawalId + " updated successfully!",
-                    withdrawalService.updateExistingWithdrawal(withdrawalId, withdrawalToBeUpdated));
-            logger.info("Withdrawal type #" + withdrawalId + " updated successfully!");
+            withdrawalService.updateExistingWithdrawal(withdrawalId, withdrawalToBeUpdated);
+            CodeFactorWithoutData success = new CodeFactorWithoutData(202, "Withdrawal #" + withdrawalId + " updated successfully!");
+            logger.info("Withdrawal #" + withdrawalId + " updated successfully!");
             return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (ResourceNotFoundException e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Withdrawal type #" + withdrawalId + " does not exist!");
-            logger.info("Error! Withdrawal type #" + withdrawalId + " does not exist!");
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Withdrawal #" + withdrawalId + " does not exist!");
+            logger.info("Error! Withdrawal #" + withdrawalId + " does not exist!");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             CodeFactorWithoutData error = new CodeFactorWithoutData(400,
-                    "Error! Withdrawal type #" + withdrawalId + " couldn't be updated due to insufficient funds!");
-            logger.info("Error! Cannot update withdrawal type #" + withdrawalId + " due to insufficient funds!");
+                    "Error! Withdrawal #" + withdrawalId + " couldn't be updated due to insufficient funds!");
+            logger.info("Error! Cannot update withdrawal #" + withdrawalId + " due to insufficient funds!");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
     } //tested and works
@@ -93,13 +103,12 @@ public class WithdrawalController {
     @DeleteMapping("/withdrawals/{withdrawalId}")
     public ResponseEntity<Object> deleteExistingWithdrawal(@PathVariable Long withdrawalId) {
         try {
-            CodeFactorWithoutData success = new CodeFactorWithoutData(200, "Withdrawal type #" + withdrawalId + " successfully deleted!");
             withdrawalService.deleteExistingWithdrawal(withdrawalId);
-            logger.info("Successfully deleted withdrawal type #" + withdrawalId + "!");
-            return new ResponseEntity<>(success, HttpStatus.OK);
+            logger.info("Successfully deleted withdrawal #" + withdrawalId + "!");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Withdrawal type #" + withdrawalId + " does not exist!");
-            logger.info("Error! Cannot delete withdrawal type #" + withdrawalId);
+            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Withdrawal #" + withdrawalId + " does not exist!");
+            logger.info("Error! Cannot delete withdrawal #" + withdrawalId);
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
     } //tested and works
