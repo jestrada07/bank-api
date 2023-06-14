@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class Bill {
@@ -21,7 +22,10 @@ public class Bill {
     private String nickname;
 
     private String creation_date;
-
+    @PrePersist
+    protected void onCreateCreation() {
+        creation_date = LocalDate.now().toString(); // or any other logic to set the date
+    }
     private String payment_date;
 
     private String recurring_date;

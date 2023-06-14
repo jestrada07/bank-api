@@ -6,11 +6,19 @@ import com.gradientbankapi.bankapi.enums.MediumType;
 import com.gradientbankapi.bankapi.enums.StatusType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import static com.gradientbankapi.bankapi.enums.StatusType.COMPLETED;
 
 @Entity
 public class Deposit {
@@ -22,7 +30,13 @@ public class Deposit {
     private TransactionType type;
     private String transaction_date;
 
-    private StatusType status;
+    @PrePersist
+    protected void onCreate() {
+        transaction_date = LocalDate.now().toString();
+    }
+    private StatusType status = StatusType.getDefault();
+
+
     @NotNull
     private Long payee_id;
     @NotNull
