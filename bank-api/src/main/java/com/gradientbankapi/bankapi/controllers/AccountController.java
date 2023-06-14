@@ -2,7 +2,6 @@ package com.gradientbankapi.bankapi.controllers;
 
 import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.code_response.CodeMessageFactor;
-import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.services.AccountService;
 import org.slf4j.Logger;
@@ -52,20 +51,6 @@ public class AccountController {
         return new ResponseEntity<>(failedResponse, HttpStatus.NOT_FOUND);
     } //tested and works
 
-    //HTTP method to get an account by id
-//    @GetMapping("/accounts/{accountId}")
-//    public ResponseEntity<Object> getAnAccountById(@PathVariable Long accountId) {
-//        try {
-//            CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer account #" + accountId, accountService.getAnAccountById(accountId));
-//            logger.info("Successfully retrieved customer account #" + accountId);
-//            return new ResponseEntity<>(success, HttpStatus.OK);
-//        } catch (Exception e) {
-//            CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Error! Customer account #" + accountId + " does not exist!");
-//            logger.info("Error! Customer account #" + accountId + " does not exist");
-//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-//        }
-//    } //tested and works
-
     @GetMapping("/accounts/{accountId}")
     public ResponseEntity<Object> getAnAccountById(@PathVariable Long accountId) {
         if (accountService.getAnAccountById(accountId).isEmpty()) {
@@ -76,8 +61,7 @@ public class AccountController {
         CodeMessageFactor success = new CodeMessageFactor(200, "Successfully retrieved customer account #" + accountId, accountService.getAnAccountById(accountId));
         logger.info("Successfully retrieved customer account #" + accountId);
         return new ResponseEntity<>(success, HttpStatus.OK);
-
-    }
+    } //tested and works
 
     //HTTP method to create an account
     @PostMapping("/customers/{customerId}/accounts")

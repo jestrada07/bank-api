@@ -4,13 +4,11 @@ import com.gradientbankapi.bankapi.code_response.CodeFactorWithoutData;
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
 import com.gradientbankapi.bankapi.models.Customer;
-import com.gradientbankapi.bankapi.models.Deposit;
 import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,7 +34,6 @@ public class AccountService {
 
     //get an account by id
     public Optional<Account> getAnAccountById(Long accountId) {
-        //verifyAccount(accountId);
         return accountRepo.findById(accountId);
     }
 
@@ -75,7 +72,5 @@ public class AccountService {
             throw new ResourceNotFoundException(error.getMessage());
         }
     }
-
-
 
 }
