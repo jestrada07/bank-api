@@ -9,9 +9,6 @@ public enum StatusType {
 
     PENDING, CANCELLED, COMPLETED;
 
-    @Autowired
-    private DepositRepo depositRepo;
-
     public static StatusType getDefault(){
         return PENDING;
     }
