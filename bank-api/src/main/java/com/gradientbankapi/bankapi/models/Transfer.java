@@ -1,9 +1,9 @@
 package com.gradientbankapi.bankapi.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.gradientbankapi.bankapi.enums.StatusType;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class Transfer {
@@ -14,7 +14,15 @@ public class Transfer {
 
     private Long sendingCustomer;
 
-    private Long recievingCustomer;
+    private Long receivingCustomer;
+
+    private String transaction_date;
+    @PrePersist
+    protected void onCreate() {
+        transaction_date = LocalDate.now().toString(); // or any other logic to set the date
+    }
+
+    private StatusType status = StatusType.getDefault();
 
     private double amount;
 
@@ -34,12 +42,28 @@ public class Transfer {
         this.sendingCustomer = sendingCustomer;
     }
 
-    public Long getRecievingCustomer() {
-        return recievingCustomer;
+    public Long getReceivingCustomer() {
+        return receivingCustomer;
     }
 
-    public void setRecievingCustomer(Long recievingCustomer) {
-        this.recievingCustomer = recievingCustomer;
+    public void setReceivingCustomer(Long receivingCustomer) {
+        this.receivingCustomer = receivingCustomer;
+    }
+
+    public StatusType getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusType status) {
+        this.status = status;
+    }
+
+    public String getTransaction_date() {
+        return transaction_date;
+    }
+
+    public void setTransaction_date(String transaction_date) {
+        this.transaction_date = transaction_date;
     }
 
     public double getAmount() {

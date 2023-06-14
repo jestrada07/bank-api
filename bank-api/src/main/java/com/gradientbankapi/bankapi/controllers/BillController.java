@@ -103,10 +103,8 @@ public class BillController {
             BillLogs.info("Bill has been successfully modified");
             return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (ResourceNotFoundException e){
-
             CodeFactorWithoutData error = new CodeFactorWithoutData(404, "Bill ID #" + billId + " does not exist");
             BillLogs.info("Bill ID #" + billId + " does not exist");
-
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         } catch (Exception e){
             CodeFactorWithoutData error = new CodeFactorWithoutData(400,

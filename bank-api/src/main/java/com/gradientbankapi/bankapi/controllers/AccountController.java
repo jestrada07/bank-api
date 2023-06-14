@@ -85,6 +85,7 @@ public class AccountController {
     @PutMapping("customers/{customerId}/accounts/{accountId}")
     public ResponseEntity<Object> updateExistingAccount(@PathVariable Long customerId, @PathVariable Long accountId, @RequestBody Account accountToBeUpdated) {
         try {
+
             accountService.updateExistingAccount(customerId,accountId, accountToBeUpdated);
             CodeFactorWithoutData success = new CodeFactorWithoutData(202, "Customer account #" + accountId + " updated successfully!");
             logger.info("Account #" + accountId + " updated successfully!");
@@ -109,8 +110,6 @@ public class AccountController {
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
     } //tested and works
-
-
 }
 
 
