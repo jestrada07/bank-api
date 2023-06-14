@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TransferRepo extends CrudRepository<Transfer, Long> {
-    List<Transfer> findAllBySendingCustomerOrRecievingCustomer(Long sendingCustomer, Long recievingCustomer);
+    List<Transfer> findAllBySendingCustomerOrReceivingCustomer(Long sendingCustomer, Long recievingCustomer);
 }
 
 

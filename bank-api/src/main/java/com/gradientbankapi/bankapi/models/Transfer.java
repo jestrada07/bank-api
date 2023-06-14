@@ -14,7 +14,7 @@ public class Transfer {
 
     private Long sendingCustomer;
 
-    private Long recievingCustomer;
+    private Long receivingCustomer;
 
     private double amount;
 
@@ -34,12 +34,12 @@ public class Transfer {
         this.sendingCustomer = sendingCustomer;
     }
 
-    public Long getRecievingCustomer() {
-        return recievingCustomer;
+    public Long getReceivingCustomer() {
+        return receivingCustomer;
     }
 
-    public void setRecievingCustomer(Long recievingCustomer) {
-        this.recievingCustomer = recievingCustomer;
+    public void setReceivingCustomer(Long receivingCustomer) {
+        this.receivingCustomer = receivingCustomer;
     }
 
     public double getAmount() {
