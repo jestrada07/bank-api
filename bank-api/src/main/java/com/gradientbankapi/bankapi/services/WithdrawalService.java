@@ -2,15 +2,20 @@ package com.gradientbankapi.bankapi.services;
 
 import com.gradientbankapi.bankapi.exceptions.ResourceNotFoundException;
 import com.gradientbankapi.bankapi.models.Account;
+import com.gradientbankapi.bankapi.models.Deposit;
 import com.gradientbankapi.bankapi.models.Withdrawal;
 import com.gradientbankapi.bankapi.repos.AccountRepo;
 import com.gradientbankapi.bankapi.repos.WithdrawalRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+
+import static com.gradientbankapi.bankapi.enums.StatusType.COMPLETED;
+import static com.gradientbankapi.bankapi.enums.StatusType.PENDING;
 
 @Service
 public class WithdrawalService {
@@ -35,6 +40,7 @@ public class WithdrawalService {
         accountRepo.save(account); // Save updated account to the database
 
         withdrawalToBeCreated.setAccount(account);
+        changeDefault();
         return withdrawalRepo.save(withdrawalToBeCreated);
     }
 
@@ -106,6 +112,17 @@ public class WithdrawalService {
         Optional<Withdrawal> withdrawal = withdrawalRepo.findById(withdrawalId);
         if(withdrawal.isEmpty()) {
             throw new ResourceNotFoundException("A withdrawal with an ID of #" + withdrawalId + " does not exist! :)");
+        }
+    }
+
+    @Scheduled(fixedRate = 9000)
+    protected void changeDefault() {
+        Iterable<Withdrawal> d = withdrawalRepo.findAll();
+        for (Withdrawal check : d) {
+            if (check.getStatus() == PENDING) {
+                check.setStatus(COMPLETED);
+                withdrawalRepo.save(check);
+            }
         }
     }
 
