@@ -29,11 +29,13 @@ public class Deposit {
     @NotNull
     private TransactionType type;
     private String transaction_date;
+
     @PrePersist
     protected void onCreate() {
-        transaction_date = LocalDate.now().toString(); // or any other logic to set the date
+        transaction_date = LocalDate.now().toString();
     }
     private StatusType status = StatusType.getDefault();
+
 
     @NotNull
     private Long payee_id;

@@ -15,7 +15,7 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private StatusType status;
+    private StatusType status = StatusType.getDefault();
 
     private String payee;
 
@@ -24,7 +24,7 @@ public class Bill {
     private String creation_date;
     @PrePersist
     protected void onCreateCreation() {
-        creation_date = LocalDate.now().toString(); // or any other logic to set the date
+        creation_date = LocalDate.now().toString(); // gets the date automatically of present time/day
     }
     private String payment_date;
 

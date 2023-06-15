@@ -17,10 +17,12 @@ public class Transfer {
     private Long receivingCustomer;
 
     private String transaction_date;
-    @PrePersist
+
+    //sets default value for the transaction date - executes before entity is created
+    @PrePersist //By using @PrePersist and the onCreate() method, the code ensures that the transaction_date attribute is automatically populated with the current date before the entity is saved to the database. This can be useful for maintaining a record of when each entity was created or when a specific transaction occurred.
     protected void onCreate() {
-        transaction_date = LocalDate.now().toString(); // or any other logic to set the date
-    }
+        transaction_date = LocalDate.now().toString();
+    } // It retrieves the current date and converts it to a string representation, which is then assigned to the transaction_date variable.
 
     private StatusType status = StatusType.getDefault();
 

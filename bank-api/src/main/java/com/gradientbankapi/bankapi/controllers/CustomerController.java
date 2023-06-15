@@ -94,7 +94,7 @@ public class CustomerController {
     //HTTP method to update a specific existing customer
     @PutMapping("/customers/{customerId}")
     public ResponseEntity<Object> updateExistingCustomer(@PathVariable Long customerId, @RequestBody Customer customerToBeUpdated) {
-        try {
+        try { customerService.updateExistingCustomer(customerId, customerToBeUpdated);
             CodeFactorWithoutData success = new CodeFactorWithoutData(202, "Customer #" + customerId + " updated successfully!");
             logger.info("Customer #" + customerId + " updated successfully!");
             return new ResponseEntity<>(success, HttpStatus.ACCEPTED);
